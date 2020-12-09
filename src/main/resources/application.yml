@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/zy_test?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC&autoReconnect=true
+    username: root
+    password: 123456
+
+mybatis-plus:
+  configuration:
+    # 关闭驼峰到下划线的映射
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      # 关闭数据库表的下划线映射
+      table-underline: false
+  # 枚举映射包
+  typeEnumsPackage: cn.cuilan.enums
+
+# 分页配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  row-bounds-with-count: true
