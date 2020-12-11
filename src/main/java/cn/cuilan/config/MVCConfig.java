@@ -8,6 +8,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -56,5 +57,13 @@ public class MVCConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         // 设置默认页面
         registry.addViewController("/");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 设置跨域请求
+        registry.addMapping("/**")
+                // 允许以下类型请求跨域访问
+                .allowedMethods("GET", "POST", "PUT");
     }
 }

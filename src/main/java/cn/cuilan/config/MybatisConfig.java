@@ -21,7 +21,7 @@ public class MybatisConfig {
      * mybatis-plus SQL执行效率插件【生产环境可以关闭】
      */
     @Bean
-    @Profile({"dev", "local"})
+    @Profile({"local", "dev", "test"})
     public PerformanceInterceptor performanceInterceptor() {
         return new PerformanceInterceptor();
     }
