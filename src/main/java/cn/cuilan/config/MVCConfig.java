@@ -1,5 +1,7 @@
 package cn.cuilan.config;
 
+import cn.cuilan.annotation.IPArgumentResolver;
+import cn.cuilan.annotation.LoginUserArgumentResolver;
 import cn.cuilan.exception.handler.BaseExceptionResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -12,12 +14,19 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
 @Configuration
 public class MVCConfig implements WebMvcConfigurer {
+
+//    @Resource
+//    private IPArgumentResolver ipArgumentResolver;
+
+    @Resource
+    private LoginUserArgumentResolver loginUserArgumentResolver;
 
     /**
      * 统一输出编码
@@ -44,7 +53,9 @@ public class MVCConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         // IP注解解析器
-        //resolvers.add(ipArgumentResolver);
+        // resolvers.add(ipArgumentResolver);
+        // 获取当前登录用户解析器
+        resolvers.add(loginUserArgumentResolver);
     }
 
     @Override

@@ -1,24 +1,42 @@
 <template>
   <div class="login_container">
-    <div class="title"><h1>管理系统</h1></div>
+    <div class="title"><h1>中小学管理系统</h1></div>
     <div class="login_box">
       <!-- 头像 -->
       <div class="avatar_box">
         <img src="../assets/logo.png" alt="" />
       </div>
       <!-- 登录表单 -->
-      <el-form label-width="0px" class="login_form" :model="loginForm" :rules="loginFormRules" ref="loginFormRef">
+      <el-form
+        label-width="0px"
+        class="login_form"
+        :model="loginForm"
+        :rules="loginFormRules"
+        ref="loginFormRef"
+      >
         <!-- 用户名 -->
         <el-form-item prop="username">
-          <el-input placeholder="请输入用户名" prefix-icon="el-icon-user" v-model="loginForm.username"></el-input>
+          <el-input
+            placeholder="请输入用户名"
+            prefix-icon="el-icon-user"
+            v-model="loginForm.username"
+          ></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
-          <el-input placeholder="请输入密码" prefix-icon="el-icon-view" v-model="loginForm.password" type="password"> </el-input>
+          <el-input
+            placeholder="请输入密码"
+            prefix-icon="el-icon-lock"
+            v-model="loginForm.password"
+            type="password"
+          >
+          </el-input>
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item class="btns">
-          <el-button type="primary" @click="submitForm()">登录</el-button>
+          <el-button class="custom-button" type="primary" @click="login()"
+            >登录</el-button
+          >
           <el-button type="info" @click="resetLoginForm()">重置</el-button>
         </el-form-item>
       </el-form>
@@ -28,7 +46,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       // 登录表单的数据对象
       loginForm: {
@@ -50,23 +68,32 @@ export default {
     }
   },
   methods: {
-    submitForm () {
+    login() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) {
           return false
         } else {
-          const { data: res } = await this.$http.post('/api/sysUser/login', this.loginForm)
-          console.log(res)
+          const { data: res } = await this.$http.post(
+            '/api/sysUser/login',
+            this.loginForm
+          )
+          // console.log(res)
           if (res.code !== 200) {
-            console.log('登录失败')
+            this.$message.error(res.message)
             return false
           }
-          console.log('登录成功')
+          this.$message.success('登录成功')
+          // 保存token
+          window.sessionStorage.setItem('token', res.data.token)
+          // 保存头像
+          window.sessionStorage.setItem('avatar', res.data.sysUser.portrait)
+          // 页面跳转
+          this.$router.push('/home')
           return true
         }
       })
     },
-    resetLoginForm () {
+    resetLoginForm() {
       this.$refs.loginFormRef.resetFields()
     }
   }

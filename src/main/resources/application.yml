@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: local
   main:
     # 允许BeanDefinition出现重复名称，子类可以覆盖
     allow-bean-definition-overriding: true

@@ -12,10 +12,18 @@ import './assets/css/global.css'
 // 导入axios请求包
 import axios from 'axios'
 
-const devHost = 'http://localhost:8888'
+const devHost = 'http://localhost:8080'
 // const prodHost = 'http://127.0.0.1'
 
 axios.defaults.baseURL = devHost
+
+// axios 请求拦截器
+axios.interceptors.request.use(config => {
+  // console.log(config)
+  // 为所有请求添加请求头token
+  config.headers.token = window.sessionStorage.getItem('token')
+  return config
+})
 
 // 每个vue对象都可以通过属性访问$http
 Vue.prototype.$http = axios

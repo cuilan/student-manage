@@ -1,6 +1,11 @@
 package cn.cuilan.entity;
 
+import cn.cuilan.common.BaseIdTimeEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 系统用户
@@ -9,12 +14,14 @@ import lombok.Data;
  * @date 2020/12/9
  */
 @Data
-public class SysUser {
+@EqualsAndHashCode(callSuper = true)
+@TableName("t_sys_user")
+public class SysUser extends BaseIdTimeEntity<Long> {
 
     /**
      * 用户名称
      */
-    private String userName;
+    private String username;
 
     /**
      * 密码
@@ -22,12 +29,34 @@ public class SysUser {
     private String password;
 
     /**
-     * 该用户可访问的菜单，多菜单用英文逗号隔开
+     * 电话
      */
-    private String menus;
+    private String phone;
 
     /**
-     * 该用户拥有的权限，多权限用英文逗号隔开
+     * 是否可用
      */
-    private String permissions;
+    private boolean status;
+
+    /**
+     * 头像
+     */
+    private String portrait;
+
+    /**
+     * 最后登录IP
+     */
+    private String lastLoginIp;
+
+    /**
+     * 最后登录时间
+     */
+    private Long lastLoginTime;
+
+    /**
+     * 将 Long 类型时间转为 LocalDateTime 类型
+     */
+    public LocalDateTime getLastLoginDateTime() {
+        return toLocalDateTime(lastLoginTime);
+    }
 }
