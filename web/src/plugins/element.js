@@ -22,7 +22,8 @@ import {
   Switch,
   Tooltip,
   Pagination,
-  Avatar
+  Avatar,
+  Dialog
 } from 'element-ui'
 
 Vue.use(Button)
@@ -47,6 +48,7 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Avatar)
+Vue.use(Dialog)
 
 // 挂载Message到原型对象上
 Vue.prototype.$message = Message

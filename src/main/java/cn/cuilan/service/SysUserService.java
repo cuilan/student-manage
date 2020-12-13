@@ -40,11 +40,24 @@ public class SysUserService extends BaseService<SysUserMapper, SysUser> {
      * @param pageSize 分页大小
      * @return 返回用户列表
      */
-    public Page<SysUser> getListByUsername(String username, int pageNum, int pageSize) {
+    public Page<SysUser> getListByUsername(boolean isAdmin, String username, int pageNum, int pageSize) {
         if (StrUtil.isBlank(username)) {
             username = null;
         }
-        return sysUserMapper.getListByUsername(username, pageNum, pageSize);
+        Page<SysUser> sysUsers = sysUserMapper.getListByUsername(username, pageNum, pageSize);
+        if (!isAdmin) {
+            sysUsers.forEach(this::ignoreSysUserInfo);
+        }
+        return sysUsers;
+    }
+
+    /**
+     * 忽略用户敏感信息
+     *
+     * @param sysUser sysUser
+     */
+    public void ignoreSysUserInfo(SysUser sysUser) {
+        sysUser.setPassword(null);
     }
 
 }

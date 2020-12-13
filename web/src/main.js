@@ -12,10 +12,10 @@ import './assets/css/global.css'
 // 导入axios请求包
 import axios from 'axios'
 
-const devHost = 'http://localhost:8080'
-// const prodHost = 'http://127.0.0.1'
+// const devHost = 'http://localhost:8080'
+const prodHost = 'http://10.10.5.100:8080'
 
-axios.defaults.baseURL = devHost
+axios.defaults.baseURL = prodHost
 
 // axios 请求拦截器
 axios.interceptors.request.use(config => {

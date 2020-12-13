@@ -25,7 +25,12 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button class="custom-button" type="primary">添加用户</el-button>
+          <el-button
+            class="custom-button"
+            type="primary"
+            @click="addDialogVisible = true"
+            >添加用户</el-button
+          >
         </el-col>
       </el-row>
       <!-- 数据列表 -->
@@ -72,6 +77,7 @@
                 icon="el-icon-edit"
                 size="mini"
                 v-model="scope.row.id"
+                @click="showEditDialog(scope.row.id)"
               ></el-button>
             </el-tooltip>
             <el-tooltip
@@ -124,12 +130,86 @@
       >
       </el-pagination>
     </el-card>
+    <!-- 添加用户的对话框 -->
+    <el-dialog
+      title="添加用户"
+      :visible.sync="addDialogVisible"
+      width="50%"
+      @close="addDialogclose"
+    >
+      <el-form
+        :model="addSysUserForm"
+        :rules="addSysUserFormRules"
+        ref="addSysUserFormRef"
+        label-width="100px"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addSysUserForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="初始密码" prop="password">
+          <el-input v-model="addSysUserForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="addSysUserForm.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="头像" prop="portrait">
+          <el-input v-model="addSysUserForm.portrait"></el-input>
+        </el-form-item>
+      </el-form>
+      <!-- 按钮区域 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button class="custom-button" type="primary" @click="addSysUser"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+    <!-- 修改用户的对话框 -->
+    <el-dialog
+      title="修改用户"
+      :visible.sync="editDialogVisible"
+      width="50%"
+      @close="updateDialogclose"
+    >
+      <el-form
+        :model="editSysUserForm"
+        :rules="addSysUserFormRules"
+        ref="editSysUserFormRef"
+        label-width="100px"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editSysUserForm.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="初始密码" prop="password">
+          <el-input v-model="editSysUserForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="editSysUserForm.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="头像" prop="portrait">
+          <el-input v-model="editSysUserForm.portrait"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateSysUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
   data() {
+    // 自定义电话号码验证规则
+    var checkPhone = (rule, value, callback) => {
+      const regPhone = /^1[3|4|5|7|8][0-9]{9}$/
+      if (regPhone.test(value)) {
+        // 合法电话号码
+        return callback()
+      }
+      callback(new Error('请输入合法的电话号码'))
+    }
     return {
       // 获取用户列表的参数
       queryInfo: {
@@ -137,8 +217,47 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
+      // 分页查询的多个结果集
       userList: [],
-      total: 0
+      total: 0,
+      isAdmin: false,
+      // 控制添加用户对话框的显示
+      addDialogVisible: false,
+      // 控制修改用户对话框的显示
+      editDialogVisible: false,
+      // 添加系统用户表单数据
+      addSysUserForm: {
+        username: '',
+        password: '',
+        phone: '',
+        portrait: ''
+      },
+      // 添加用户表单验证对象
+      addSysUserFormRules: {
+        username: [
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
+          { min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { min: 6, max: 11, message: '电话号码为 11 位', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'blur' }
+        ]
+      },
+      // 根据id查询的结果，修改
+      editSysUserForm: {
+        id: 0,
+        username: '',
+        password: '',
+        phone: '',
+        portrait: ''
+      },
+      // 修改验证对象
+      editSysUserFormRules: {}
     }
   },
   created() {
@@ -155,6 +274,20 @@ export default {
       }
       this.userList = res.data.sysUsers.data
       this.total = res.data.sysUsers.total
+      this.isAdmin = res.data.isAdmin
+    },
+    // 修改用户信息，并发起更新请求
+    async updateStatus(userInfo) {
+      // console.log(userInfo)
+      const { data: res } = await this.$http.post('/api/sysUser/update', {
+        id: userInfo.id,
+        status: userInfo.status
+      })
+      if (res.code !== 200) {
+        userInfo.status = !userInfo.status
+        return this.$message.error(res.message)
+      }
+      return this.$message.success('状态更新成功!')
     },
     // 监听 pageSize 改变事件
     handleSizeChange(newSize) {
@@ -170,18 +303,69 @@ export default {
       this.queryInfo.pageNum = newPage
       this.getUserList()
     },
-    // 修改用户信息，并发起更新请求
-    async updateStatus(userInfo) {
-      // console.log(userInfo)
-      const { data: res } = await this.$http.post('/api/sysUser/update', {
-        id: userInfo.id,
-        status: userInfo.status
+    // 关闭添加用户对话框事件
+    addDialogclose() {
+      this.$refs.addSysUserFormRef.resetFields()
+    },
+    // 关闭修改用户对话框事件
+    updateDialogclose() {
+      this.$refs.editSysUserFormRef.resetFields()
+    },
+    // 点击确定，添加用户预验证函数
+    addSysUser() {
+      this.$refs.addSysUserFormRef.validate(async valid => {
+        // console.log(valid)
+        if (!valid) {
+          return valid
+        }
+        // 验证成功，发起请求
+        const { data: res } = await this.$http.post(
+          '/api/sysUser/add',
+          this.addSysUserForm
+        )
+        if (res.code !== 200) {
+          this.$message.error(res.message)
+        }
+        this.$message.success('添加成功!')
+        this.addDialogVisible = false
+        // 刷新用户列表
+        this.getUserList()
       })
+    },
+    // 点击确定，修改用户预验证函数
+    updateSysUser() {
+      this.$refs.editSysUserFormRef.validate(async valid => {
+        // console.log(valid)
+        if (!valid) {
+          return valid
+        }
+        // 验证成功，发起请求
+        const { data: res } = await this.$http.post(
+          '/api/sysUser/update',
+          this.editSysUserForm
+        )
+        if (res.code !== 200) {
+          this.$message.error(res.message)
+        }
+        this.$message.success('更新成功!')
+        this.editDialogVisible = false
+        // 刷新用户列表
+        this.getUserList()
+      })
+    },
+    // 展示修改用户对话框
+    async showEditDialog(id) {
+      this.editDialogVisible = true
+      // console.log(id)
+      const { data: res } = await this.$http.get('/api/sysUser/query', {
+        params: { id: id }
+      })
+      // console.log(res)
       if (res.code !== 200) {
-        userInfo.status = !userInfo.status
         return this.$message.error(res.message)
       }
-      return this.$message.success('状态更新成功!')
+      console.log(res.data.sysUser)
+      this.editSysUserForm = res.data.sysUser
     }
   }
 }

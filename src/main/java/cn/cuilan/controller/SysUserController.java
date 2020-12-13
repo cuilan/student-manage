@@ -71,11 +71,29 @@ public class SysUserController {
      */
     @GetMapping("/api/sysUser/query")
     public Result<?> querySysUser(@Logined Long currentSysUserId,
+                                  @RequestParam(value = "id", required = false) Long sysUserId,
                                   @RequestParam(value = "username", required = false) String username,
                                   @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
                                   @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
         log.info("query SysUser, currentSysUserId: {}", currentSysUserId);
-        return Result.map().data("sysUsers", sysUserService.getListByUsername(username, pageNum, pageSize));
+        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
+        boolean isAdmin = false;
+        if (currentSysUser.getUsername().equals("admin")) {
+            isAdmin = true;
+        }
+
+        if (sysUserId != null && sysUserId != 0) {
+            SysUser sysUser = sysUserService.getNotNull(sysUserId);
+            // 如果不是管理员，需要忽略用户敏感信息
+            if (!isAdmin) {
+                sysUserService.ignoreSysUserInfo(sysUser);
+            }
+            return Result.map().data("sysUser", sysUser);
+        }
+
+        return Result.map()
+                .data("isAdmin", isAdmin)
+                .data("sysUsers", sysUserService.getListByUsername(isAdmin, username, pageNum, pageSize));
     }
 
     /**
@@ -93,6 +111,23 @@ public class SysUserController {
 
         SysUser sysUser = sysUserService.getNotNull(sysUserId);
         sysUserService.updateById(sysUser);
+        return Result.success();
+    }
+
+    /**
+     * 添加系统用户
+     */
+    @PostMapping("/api/sysUser/add")
+    public Result<?> addSysUser(@Logined Long currentSysUserId, @RequestBody SysUser sysUser) {
+        log.info("add SysUser, currentSysUserId: {}", currentSysUserId);
+
+        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
+        if (!currentSysUser.getUsername().equals("admin")) {
+            return Result.fail("只有管理员才有权限添加新用户!");
+        }
+
+        sysUser.setStatus(true);
+        sysUserService.save(sysUser);
         return Result.success();
     }
 

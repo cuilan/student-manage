@@ -168,6 +168,10 @@ export default {
       background-color: #314156;
       border-color: #314156;
     }
+    > .el-button:hover {
+      background-color: #45515f;
+      border-color: #45515f;
+    }
   }
 }
 .el-aside {
