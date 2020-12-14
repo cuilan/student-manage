@@ -19,6 +19,42 @@
         </el-col>
       </el-row>
       <el-table :data="roleList" border stripe>
+        <el-table-column type="expand">
+          <template v-slot="scope">
+            <el-row
+              :class="['bdbottom', i1 === 0 ? 'bdtop' : '', 'vcenter']"
+              v-for="(item1, i1) in scope.row.sysMenus"
+              :key="item1.id"
+            >
+              <!-- 一级菜单 -->
+              <el-col :span="5">
+                <el-tag
+                  closable
+                  @close="removeRoleMenuRelation(scope.row, item1.id)"
+                  >{{ item1.name }}</el-tag
+                >
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <!-- 二级菜单 -->
+              <el-col :span="19">
+                <el-row
+                  :class="[i2 === 0 ? '' : 'bdtop']"
+                  v-for="(item2, i2) in item1.subMenus"
+                  :key="item2.id"
+                >
+                  <el-col>
+                    <el-tag
+                      type="success"
+                      closable
+                      @close="removeRoleMenuRelation(scope.row, item2.id)"
+                      >{{ item2.name }}</el-tag
+                    >
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column label="ID" type="index"></el-table-column>
         <el-table-column label="菜单名称" prop="name"> </el-table-column>
         <el-table-column label="描述" prop="description"></el-table-column>
@@ -282,9 +318,50 @@ export default {
       this.$message.success('删除成功')
       // 刷新列表
       this.getRoleList()
+    },
+    // 根据roleId和menuId删除菜单与角色的关系
+    async removeRoleMenuRelation(role, menuId) {
+      const confirmResult = await this.$confirm(
+        '确认删除该菜单与角色的关联关系?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已取消删除')
+      }
+      // console.log(roleId, menuId)
+      const { data: res } = await this.$http.post(
+        `/api/sysRole/deleteSysMenu?sysRoleId=${role.id}&sysMenuId=${menuId}`
+      )
+      if (res.code !== 200) {
+        return this.$message.error(res.message)
+      }
+      role.sysMenus = res.data.newMenus
     }
   }
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+/* 设置tag间隔 */
+.el-tag {
+  margin: 7px;
+}
+/* 设置tag顶部边框线 */
+.bdtop {
+  border-top: 1px solid #eee;
+}
+/* 设置tag底部边框线 */
+.bdbottom {
+  border-bottom: 1px solid #eee;
+}
+/* tag标签纵向居中对齐 */
+.vcenter {
+  display: flex;
+  align-items: center;
+}
+</style>

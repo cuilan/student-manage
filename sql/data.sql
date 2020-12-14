@@ -2,7 +2,7 @@
 INSERT INTO `t_sys_user`(`id`, `username`, `password`, `phone`, `status`, `portrait`,
 `last_login_ip`, `last_login_time`, `create_time`, `update_time`) VALUES
 (1, 'admin', '123456', '17700001111', 1, 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', '', 1607765013556, 1607765013556, 1607765013556),
-(2, 'user1', '12345678', '18900001111', 1, '', '', 1607765013556, 1607765013556, 1607765013556),
+(2, 'user1', '12345678', '18900001111', 1, 'https://lh3.googleusercontent.com/ogw/ADGmqu_ohmdl-VKxHm2qTPn1Cd7w6yE2EHVuKhWKgLQl=s64-c-mo', '', 1607765013556, 1607765013556, 1607765013556),
 (3, 'user2', '12345678', '18900002222', 1, '', '', 1607765013556, 1607765013556, 1607765013556);
 
 -- 插入系统菜单
@@ -33,4 +33,10 @@ INSERT INTO `t_sys_menu`(`id`, `name`, `url`, `icon`, `parent_id`, `priority`,
 
 -- 插入系统角色
 INSERT INTO `t_sys_role`(`id`, `name`, `description`, `visible`, `create_time`, `update_time`) VALUES
-(1, '超级管理员', '拥有所有权限', 1, 1607765013556, 1607765013556);
+(1, 'ROLE_ROOT', '超级管理员', 1, 1607765013556, 1607765013556),
+(2, 'ROLE_ADMIN', '系统管理员', 1, 1607765013556, 1607765013556),
+(3, 'ROLE_USER', '普通用户', 1, 1607765013556, 1607765013556);
+
+-- 插入关联表初始数据
+INSERT INTO `t_sys_user_roles`(`roles_id`, `sys_user_id`) VALUES (1, 1), (2, 1), (3, 1);
+INSERT INTO `t_sys_menu_roles`(`roles_id`, `sys_menu_id`) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8);

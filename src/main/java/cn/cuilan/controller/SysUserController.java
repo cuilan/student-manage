@@ -41,6 +41,10 @@ public class SysUserController {
 
         SysUser sysUser = sysUserService.getByUsername(username);
 
+        if (sysUser == null) {
+            return Result.fail("未找到该用户");
+        }
+
         if (!sysUser.getPassword().equals(password)) {
             return Result.fail("密码错误");
         }

@@ -3,11 +3,13 @@ package cn.cuilan.controller;
 import cn.cuilan.annotation.Logined;
 import cn.cuilan.entity.SysRole;
 import cn.cuilan.entity.SysUser;
+import cn.cuilan.service.SysMenuService;
 import cn.cuilan.service.SysRoleService;
 import cn.cuilan.service.SysUserService;
 import cn.cuilan.utils.result.Result;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,9 @@ public class SysRoleController {
     @Resource
     private SysUserService sysUserService;
 
+    @Resource
+    private SysMenuService sysMenuService;
+
     /**
      * 查询系统角色
      */
@@ -44,7 +49,10 @@ public class SysRoleController {
      */
     @GetMapping("/api/sysRole/id")
     public Result<?> getSysRoleById(@Logined Long currentSysUserId, Long id) {
-        return Result.map().data("sysRole", sysRoleService.getNotNull(id));
+        SysRole sysRole = sysRoleService.getNotNull(id);
+        // 将该角色可见的系统菜单放入
+        sysRole.setSysMenus(sysMenuService.getSysMenusByRoleId(sysRole.getId()));
+        return Result.map().data("sysRole", sysRole);
     }
 
     /**
@@ -105,6 +113,14 @@ public class SysRoleController {
 
         boolean deleted = sysRoleService.removeById(sysRoleId);
         return deleted ? Result.success("删除成功") : Result.fail("删除失败");
+    }
+
+    /**
+     * 根据角色id和菜单id删除关联关系
+     */
+    @PostMapping("/api/sysRole/deleteSysMenu")
+    public Result<?> deleteByRoleIdAndMenuId(@Param("sysRoleId") Long sysRoleId, @Param("sysMenuId") Long sysMenuId) {
+        return Result.map().data("newMenus", sysRoleService.deleteByRoleIdAndMenuId(sysRoleId, sysMenuId));
     }
 
 }

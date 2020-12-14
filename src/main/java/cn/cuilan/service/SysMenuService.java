@@ -1,6 +1,7 @@
 package cn.cuilan.service;
 
 import cn.cuilan.entity.SysMenu;
+import cn.cuilan.entity.SysUser;
 import cn.cuilan.mapper.SysMenuMapper;
 import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,35 @@ public class SysMenuService extends BaseService<SysMenuMapper, SysMenu> {
     @Resource
     private SysMenuMapper sysMenuMapper;
 
-    public List<SysMenu> getAllSysMenu() {
-        List<SysMenu> sysMenus = sysMenuMapper.getAllSysMenu();
+    @Resource
+    private SysUserService sysUserService;
+
+    /**
+     * 查询当前登录用户的可见菜单
+     *
+     * @param sysUserId 当前登录用户id
+     * @return 返回可见菜单
+     */
+    public List<SysMenu> getSysMenusBySysUserId(Long sysUserId) {
+        List<SysMenu> sysMenus;
+        SysUser sysUser = sysUserService.getNotNull(sysUserId);
+        // 管理员可以查看所有
+        if (sysUser.getUsername().equals("admin")) {
+            sysMenus = sysMenuMapper.getAllSysMenu();
+        } else {
+            sysMenus = sysMenuMapper.getSysMenusBySysUserId(sysUserId);
+        }
+        return sortSysMenus(sysMenus);
+    }
+
+    /**
+     * 查询当前角色可见的系统菜单
+     *
+     * @param sysRoleId 系统角色id
+     * @return 菜单list
+     */
+    public List<SysMenu> getSysMenusByRoleId(Long sysRoleId) {
+        List<SysMenu> sysMenus = sysMenuMapper.getSysMenusBySysRoleId(sysRoleId);
         return sortSysMenus(sysMenus);
     }
 
@@ -49,6 +77,9 @@ public class SysMenuService extends BaseService<SysMenuMapper, SysMenu> {
         });
 
         List<SysMenu> menus = parentSysMenuMap.get(rootParentId);
+        if (CollUtil.isEmpty(menus)) {
+            return null;
+        }
         Collections.sort(menus);
         // 放入子菜单
         menus.forEach(menu -> {

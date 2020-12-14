@@ -27,7 +27,7 @@ public class SysMenuController {
      */
     @GetMapping("/api/sysMenu/all")
     public Result<?> getAllMenus(@Logined Long sysUserId) {
-        return Result.map().data("menus", sysMenuService.getAllSysMenu());
+        return Result.map().data("menus", sysMenuService.getSysMenusBySysUserId(sysUserId));
     }
 
 }
