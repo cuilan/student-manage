@@ -14,7 +14,8 @@ INSERT INTO `t_sys_menu`(`id`, `name`, `url`, `icon`, `parent_id`, `priority`,
 (4, '考试信息管理', '/exams', 'el-icon-s-check', 0, 4, 1, 1607765013556, 1607765013556),
 (5, '系统管理', '/settings', 'el-icon-s-tools', 0, 5, 1, 1607765013556, 1607765013556),
 (6, '系统用户管理', '/users', 'el-icon-user', 5, 6, 1, 1607765013556, 1607765013556),
-(7, '系统菜单用户', '/menus', 'el-icon-document', 5, 7, 1, 1607765013556, 1607765013556),
+(7, '系统菜单管理', '/menus', 'el-icon-document', 5, 7, 1, 1607765013556, 1607765013556),
+(8, '系统角色管理', '/roles', 'el-icon-trophy', 5, 8, 1, 1607765013556, 1607765013556),
 
 (8, '录入信息', '/student-add', 'el-icon-document-add', 2, 8, 1, 1607765013556, 1607765013556),
 (9, '查询信息', '/student-query', 'el-icon-search', 2, 9, 1, 1607765013556, 1607765013556),
@@ -28,8 +29,8 @@ INSERT INTO `t_sys_menu`(`id`, `name`, `url`, `icon`, `parent_id`, `priority`,
 (17, '修改考试', '/exam-query', 'el-icon-check', 3, 17, 1, 1607765013556, 1607765013556),
 (18, '删除考试', '/exam-delete', 'el-icon-close', 3, 18, 1, 1607765013556, 1607765013556),
 (19, '科目管理', '/exam-manage', 'el-icon-monitor', 3, 19, 1, 1607765013556, 1607765013556),
-
-
-
-
 ;
+
+-- 插入系统角色
+INSERT INTO `t_sys_role`(`id`, `name`, `description`, `visible`, `create_time`, `update_time`) VALUES
+(1, '超级管理员', '拥有所有权限', 1, 1607765013556, 1607765013556);

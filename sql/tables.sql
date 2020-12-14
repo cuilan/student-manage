@@ -38,3 +38,17 @@ CREATE TABLE `t_sys_menu`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8 COMMENT ='系统菜单表';
+
+-- 系统角色表
+CREATE TABLE `t_sys_role`
+(
+    `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '角色Id',
+    `name`        VARCHAR(255) NOT NULL DEFAULT '' COMMENT '角色名称',
+    `description` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '描述',
+    `create_time` BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time` BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `visible`     TINYINT(11)  NOT NULL DEFAULT 0 COMMENT '是否可见，0-不可见，1-可见',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8 COMMENT ='系统角色表';

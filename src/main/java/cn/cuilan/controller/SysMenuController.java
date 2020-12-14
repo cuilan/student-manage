@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+
 /**
  * 系统菜单管理
  *
@@ -22,7 +23,7 @@ public class SysMenuController {
     private SysMenuService sysMenuService;
 
     /**
-     * 系统用户登录
+     * 查询系统菜单
      */
     @GetMapping("/api/sysMenu/all")
     public Result<?> getAllMenus(@Logined Long sysUserId) {

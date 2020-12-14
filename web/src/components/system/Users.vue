@@ -3,7 +3,7 @@
     <!-- 面包屑导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>系统用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>系统管理</el-breadcrumb-item>
       <el-breadcrumb-item>查询用户</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 卡片视图区 -->
@@ -388,9 +388,9 @@ export default {
         this.$message.info('已取消删除')
         return
       }
-      const { data: res } = await this.$http.post('/api/sysUser/delete', {
-        params: { id: id }
-      })
+      const { data: res } = await this.$http.post(
+        '/api/sysUser/delete?sysUserId=' + id
+      )
       if (res.code !== 200) {
         return this.$message.error(res.message)
       }
