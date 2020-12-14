@@ -97,24 +97,6 @@ public class SysUserController {
     }
 
     /**
-     * 重置密码
-     * TODO
-     */
-    @PostMapping("/api/sysUser/resetPass")
-    public Result<?> resetPass(@Logined Long currentSysUserId, Long sysUserId) {
-        log.info("reset SysUser password, currentSysUserId: {}, updated SysUserId: {}", currentSysUserId, sysUserId);
-
-        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
-        if (!currentSysUser.getUsername().equals("admin")) {
-            return Result.fail("只有管理员才有权限修改用户!");
-        }
-
-        SysUser sysUser = sysUserService.getNotNull(sysUserId);
-        sysUserService.updateById(sysUser);
-        return Result.success();
-    }
-
-    /**
      * 添加系统用户
      */
     @PostMapping("/api/sysUser/add")
@@ -148,6 +130,10 @@ public class SysUserController {
         if (StrUtil.isNotBlank(sysUser.getUsername())) {
             dbSysUser.setUsername(sysUser.getUsername());
         }
+        // 密码
+        if (StrUtil.isNotBlank(sysUser.getPassword())) {
+            dbSysUser.setPassword(sysUser.getPassword());
+        }
         // 电话
         if (StrUtil.isNotBlank(sysUser.getPhone())) {
             dbSysUser.setPhone(sysUser.getPhone());
@@ -160,6 +146,22 @@ public class SysUserController {
         dbSysUser.setStatus(sysUser.isStatus());
         sysUserService.updateById(dbSysUser);
         return Result.success();
+    }
+
+    /**
+     * 根据id删除用户
+     */
+    @PostMapping("/api/sysUser/delete")
+    public Result<?> deleteSysUser(@Logined Long currentSysUserId, Long sysUserId) {
+        log.info("delete SysUser, currentSysUserId: {}", currentSysUserId);
+
+        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
+        if (!currentSysUser.getUsername().equals("admin")) {
+            return Result.fail("只有管理员才有权限删除用户!");
+        }
+
+        boolean deleted = sysUserService.removeById(sysUserId);
+        return deleted ? Result.success("删除成功") : Result.fail("删除失败");
     }
 
 }

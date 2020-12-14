@@ -91,6 +91,7 @@
                 icon="el-icon-delete"
                 size="mini"
                 v-model="scope.row.id"
+                @click="removeUserById(scope.row.id)"
               ></el-button>
             </el-tooltip>
             <el-tooltip
@@ -364,8 +365,38 @@ export default {
       if (res.code !== 200) {
         return this.$message.error(res.message)
       }
-      console.log(res.data.sysUser)
+      // console.log(res.data.sysUser)
       this.editSysUserForm = res.data.sysUser
+    },
+    // 根据id删除用户
+    async removeUserById(id) {
+      // console.log(id)
+      // 弹框提示
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除该用户, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
+      // 如果点击确认按钮，返回的是字符串confirm
+      // 如果点击取消按钮，返回的是字符串cancel
+      // console.log(confirmResult)
+      if (confirmResult !== 'confirm') {
+        this.$message.info('已取消删除')
+        return
+      }
+      const { data: res } = await this.$http.post('/api/sysUser/delete', {
+        params: { id: id }
+      })
+      if (res.code !== 200) {
+        return this.$message.error(res.message)
+      }
+      this.$message.success('删除成功')
+      // 刷新用户列表
+      this.getUserList()
     }
   }
 }

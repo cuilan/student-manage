@@ -52,7 +52,7 @@
                 <!-- 图标 -->
                 <i :class="item.icon"></i>
                 <!-- 文本 -->
-                <span>{{ item.name }}</span>
+                <span v-if="!isCollapse">{{ item.name }}</span>
               </template>
               <!-- 二级菜单 -->
               <el-menu-item
@@ -74,7 +74,7 @@
               @click="saveNavState(item.url)"
             >
               <i :class="item.icon"></i>
-              <span>{{ item.name }}</span>
+              <span v-if="!isCollapse">{{ item.name }}</span>
             </el-menu-item>
           </div>
         </el-menu>

@@ -17,7 +17,7 @@ const router = new VueRouter({
       redirect: '/welcome',
       children: [
         { path: '/welcome', component: Welcome },
-        { path: '/user-query', component: Users }
+        { path: '/users', component: Users }
       ]
     }
   ]

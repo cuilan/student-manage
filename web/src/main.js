@@ -1,4 +1,3 @@
-
 // 导入vue组件
 import Vue from 'vue'
 // 导入App.vue
@@ -12,10 +11,12 @@ import './assets/css/global.css'
 // 导入axios请求包
 import axios from 'axios'
 
-// const devHost = 'http://localhost:8080'
+const isProd = false
+
+const devHost = 'http://localhost:8080'
 const prodHost = 'http://10.10.5.100:8080'
 
-axios.defaults.baseURL = prodHost
+axios.defaults.baseURL = isProd ? prodHost : devHost
 
 // axios 请求拦截器
 axios.interceptors.request.use(config => {

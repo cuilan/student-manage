@@ -23,7 +23,8 @@ import {
   Tooltip,
   Pagination,
   Avatar,
-  Dialog
+  Dialog,
+  MessageBox
 } from 'element-ui'
 
 Vue.use(Button)
@@ -52,3 +53,5 @@ Vue.use(Dialog)
 
 // 挂载Message到原型对象上
 Vue.prototype.$message = Message
+// 挂载MessageBox.confirm
+Vue.prototype.$confirm = MessageBox.confirm
