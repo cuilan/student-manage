@@ -53,7 +53,7 @@ public class SysMenu extends BaseIdTimeEntity<Long> implements Comparable<SysMen
      * 子菜单
      */
     @TableField(exist = false)
-    private List<SysMenu> subMenus;
+    private List<SysMenu> sysMenus;
 
     @Override
     public int compareTo(SysMenu sysMenu) {

@@ -1,7 +1,9 @@
 package cn.cuilan.service;
 
 import cn.cuilan.entity.SysUser;
+import cn.cuilan.exception.BaseException;
 import cn.cuilan.mapper.SysUserMapper;
+import cn.cuilan.utils.result.Result;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.Page;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,18 @@ public class SysUserService extends BaseService<SysUserMapper, SysUser> {
 
     @Resource
     private SysUserMapper sysUserMapper;
+
+    /**
+     * 验证是否为管理员，非管理员直接抛异常
+     *
+     * @param sysUserId 系统用户id
+     */
+    public void checkIsAdmin(Long sysUserId) {
+        SysUser currentSysUser = getNotNull(sysUserId);
+        if (!currentSysUser.getUsername().equals("admin")) {
+            throw new BaseException("只有管理员才有权限进行该操作!");
+        }
+    }
 
     /**
      * 根据用户名查询系统用户

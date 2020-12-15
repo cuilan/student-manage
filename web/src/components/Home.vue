@@ -45,7 +45,7 @@
             <!-- 一级菜单 包含子菜单-->
             <el-submenu
               :index="item.id + ''"
-              v-if="item.subMenus && item.subMenus.length > 0"
+              v-if="item.sysMenus && item.sysMenus.length > 0"
             >
               <!-- 一级菜单模板区 -->
               <template slot="title">
@@ -57,7 +57,7 @@
               <!-- 二级菜单 -->
               <el-menu-item
                 :index="subItem.url"
-                v-for="subItem in item.subMenus"
+                v-for="subItem in item.sysMenus"
                 :key="subItem.id"
                 @click="saveNavState(subItem.url)"
               >

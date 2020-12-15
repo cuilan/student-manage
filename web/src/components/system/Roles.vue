@@ -39,7 +39,7 @@
               <el-col :span="19">
                 <el-row
                   :class="[i2 === 0 ? '' : 'bdtop']"
-                  v-for="(item2, i2) in item1.subMenus"
+                  v-for="(item2, i2) in item1.sysMenus"
                   :key="item2.id"
                 >
                   <el-col>
@@ -104,7 +104,7 @@
             </el-tooltip>
             <el-tooltip
               effect="dark"
-              content="设置权限"
+              content="分配菜单"
               placement="top"
               :enterable="false"
             >
@@ -113,7 +113,8 @@
                 icon="el-icon-setting"
                 size="mini"
                 v-model="scope.row.id"
-                >设置权限</el-button
+                @click="showSetMenuDialog(scope.row)"
+                >分配菜单</el-button
               >
             </el-tooltip>
           </template>
@@ -175,6 +176,36 @@
           >
         </span>
       </el-dialog>
+      <!-- 分配菜单对话框 -->
+      <el-dialog
+        title="提示"
+        :visible.sync="showSetMenuDialogVisible"
+        width="30%"
+        @close="setMenuDialogClosed"
+      >
+        <!--
+          分配菜单的树形结构
+          :data 绑定的数据
+          :props 树结构的展示名称及子项的名称
+          show-checkbox 复选框
+          node-key 选中复选框后，绑定唯一属性，一般为id
+          default-expand-all 默认展开
+          default-checked-keys 默认勾选的节点数组
+        -->
+        <el-tree
+          :data="menuList"
+          :props="treeProps"
+          show-checkbox
+          node-key="id"
+          default-expand-all
+          :default-checked-keys="defaultKeys"
+          ref="treeRef"
+        ></el-tree>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showSetMenuDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="allotMenus">确 定</el-button>
+        </span>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -189,6 +220,9 @@ export default {
       addDialogVisible: false,
       // 控制修改对话框的显示
       editDialogVisible: false,
+      // 控制设置菜单对话框的显示
+      showSetMenuDialogVisible: false,
+      // 添加系统角色form
       addSysRoleForm: {
         name: '',
         description: ''
@@ -199,7 +233,18 @@ export default {
           { required: true, message: '请输入角色描述', trigger: 'blur' }
         ]
       },
-      editSysRoleForm: {}
+      editSysRoleForm: {},
+      // 所有菜单的数据
+      menuList: [],
+      // 树形控件的绑定对象
+      treeProps: {
+        label: 'name',
+        children: 'sysMenus'
+      },
+      // 树形结构默认选中的节点id数组
+      defaultKeys: [],
+      // 被操作的角色id
+      roleId: ''
     }
   },
   created() {
@@ -341,6 +386,63 @@ export default {
         return this.$message.error(res.message)
       }
       role.sysMenus = res.data.newMenus
+    },
+    // 展示分配菜单对话框
+    async showSetMenuDialog(role) {
+      this.roleId = role.id
+      // 获取所有菜单数据
+      const { data: res } = await this.$http.get('/api/sysMenu/all')
+      if (res.code !== 200) {
+        return this.$message.error(res.message)
+      }
+      // console.log(res.data.menus)
+      this.menuList = res.data.menus
+      // 递归获取当前角色节点的菜单id数组
+      this.getHasMenuKeys(role, this.defaultKeys)
+      // 展示对话框
+      this.showSetMenuDialogVisible = true
+    },
+    /**
+     * 通过递归获取当前角色下已有的菜单id数组，并赋值给 defaultKeys
+     * @param node 当前节点
+     * @param arr 数组
+     */
+    getHasMenuKeys(node, arr) {
+      // node如果是role(有description说明是role)，并且菜单为空，则跳过
+      if (!node.sysMenus && node.description) {
+        return
+      }
+      // 二级子菜单，则放入该节点的id
+      if (!node.sysMenus) {
+        // console.log(node.name)
+        return arr.push(node.id)
+      }
+      // 一级菜单，包含子节点，则递归调用
+      node.sysMenus.forEach(item => this.getHasMenuKeys(item, arr))
+    },
+    // 监听分配菜单对话框的关闭事件
+    setMenuDialogClosed() {
+      this.defaultKeys = []
+    },
+    // 点击树形结构确定按钮，发起请求
+    async allotMenus() {
+      // ...为展开运算符，获取选中的id，半选中的id
+      const keys = [
+        ...this.$refs.treeRef.getCheckedKeys(),
+        ...this.$refs.treeRef.getHalfCheckedKeys()
+      ]
+      // console.log(keys)
+      // 英文逗号拼接
+      const idStr = keys.join(',')
+      const { data: res } = await this.$http.post(
+        `/api/sysRole/addSysMenu?roleId=${this.roleId}&menuIds=${idStr}`
+      )
+      if (res.code !== 200) {
+        return this.$message.error(res.message)
+      }
+      this.getRoleList()
+      // 最后设置该对话框不可见
+      this.showSetMenuDialogVisible = false
     }
   }
 }

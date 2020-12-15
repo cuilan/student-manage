@@ -2,10 +2,7 @@ package cn.cuilan.mapper;
 
 import cn.cuilan.entity.SysRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -34,4 +31,21 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      */
     @Delete("delete from t_sys_menu_roles where roles_id = #{sysRoleId} and sys_menu_id = #{sysMenuId}")
     void deleteByRoleIdAndMenuId(@Param("sysRoleId") Long sysRoleId, @Param("sysMenuId") Long sysMenuId);
+
+    /**
+     * 插入菜单与角色的关联关系
+     *
+     * @param roleId 角色id
+     * @param menuId 菜单id
+     */
+    @Insert("INSERT INTO `t_sys_menu_roles`(`roles_id`, `sys_menu_id`) VALUES (#{roleId}, #{menuId})")
+    void insertSysMenuRoles(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
+
+    /**
+     * 根据角色id删除所有菜单的关联关系
+     *
+     * @param roleId 角色id
+     */
+    @Delete("delete from t_sys_menu_roles where roles_id = #{roleId}")
+    void deleteMenuIdsByRoleId(@Param("roleId") Long roleId);
 }

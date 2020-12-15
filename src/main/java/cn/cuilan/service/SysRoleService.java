@@ -51,4 +51,21 @@ public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
         sysRoleMapper.deleteByRoleIdAndMenuId(sysRoleId, sysMenuId);
         return sysMenuService.getSysMenusByRoleId(sysRoleId);
     }
+
+    /**
+     * 添加角色id与菜单数组的关联关系
+     *
+     * @param roleId  角色id
+     * @param menuIds 菜单id的字符串数组
+     */
+    public void addByRoleIdAndMenuIds(Long roleId, String[] menuIds) {
+        // 先删除所有
+        sysRoleMapper.deleteMenuIdsByRoleId(roleId);
+        // 如果不为空，则逐条添加
+        if (menuIds != null) {
+            for (String menuId : menuIds) {
+                sysRoleMapper.insertSysMenuRoles(roleId, Long.parseLong(menuId));
+            }
+        }
+    }
 }

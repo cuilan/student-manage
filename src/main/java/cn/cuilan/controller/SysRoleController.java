@@ -10,12 +10,10 @@ import cn.cuilan.utils.result.Result;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 系统角色
@@ -61,11 +59,7 @@ public class SysRoleController {
     @PostMapping("/api/sysRole/add")
     public Result<?> addSysRole(@Logined Long currentSysUserId, @RequestBody SysRole sysRole) {
         log.info("add SysRole, currentSysUserId: {}", currentSysUserId);
-
-        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
-        if (!currentSysUser.getUsername().equals("admin")) {
-            return Result.fail("只有管理员才有权限添加新角色!");
-        }
+        sysUserService.checkIsAdmin(currentSysUserId);
 
         sysRole.setVisible(true);
         sysRoleService.save(sysRole);
@@ -78,11 +72,7 @@ public class SysRoleController {
     @PostMapping("/api/sysRole/update")
     public Result<?> updateSysRole(@Logined Long currentSysUserId, @RequestBody SysRole sysRole) {
         log.info("update SysRole, currentSysUserId: {}", currentSysUserId);
-
-        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
-        if (!currentSysUser.getUsername().equals("admin")) {
-            return Result.fail("只有管理员才有权限修改权限!");
-        }
+        sysUserService.checkIsAdmin(currentSysUserId);
 
         SysRole dbSysRole = sysRoleService.getNotNull(sysRole.getId());
         // 修改角色名称
@@ -105,11 +95,7 @@ public class SysRoleController {
     @PostMapping("/api/sysRole/delete")
     public Result<?> deleteSysRole(@Logined Long currentSysUserId, Long sysRoleId) {
         log.info("delete SysRole, currentSysUserId: {}", currentSysUserId);
-
-        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
-        if (!currentSysUser.getUsername().equals("admin")) {
-            return Result.fail("只有管理员才有权限删除角色!");
-        }
+        sysUserService.checkIsAdmin(currentSysUserId);
 
         boolean deleted = sysRoleService.removeById(sysRoleId);
         return deleted ? Result.success("删除成功") : Result.fail("删除失败");
@@ -119,8 +105,29 @@ public class SysRoleController {
      * 根据角色id和菜单id删除关联关系
      */
     @PostMapping("/api/sysRole/deleteSysMenu")
-    public Result<?> deleteByRoleIdAndMenuId(@Param("sysRoleId") Long sysRoleId, @Param("sysMenuId") Long sysMenuId) {
+    public Result<?> deleteByRoleIdAndMenuId(@Logined Long currentSysUserId, @Param("sysRoleId") Long sysRoleId, @Param("sysMenuId") Long sysMenuId) {
+        sysUserService.checkIsAdmin(currentSysUserId);
         return Result.map().data("newMenus", sysRoleService.deleteByRoleIdAndMenuId(sysRoleId, sysMenuId));
     }
+
+    /**
+     * 添加角色id与菜单数组的关联关系
+     */
+    @PostMapping("/api/sysRole/addSysMenu")
+    public Result<?> addByRoleIdAndMenuIds(@Logined Long currentSysUserId,
+                                           @RequestParam("roleId") Long roleId,
+                                           @RequestParam("menuIds") String sysMenuIds) {
+        sysUserService.checkIsAdmin(currentSysUserId);
+
+        String[] menuIds;
+        if (StrUtil.isBlank(sysMenuIds)) {
+            menuIds = null;
+        } else {
+            menuIds = sysMenuIds.trim().split(",");
+        }
+        sysRoleService.addByRoleIdAndMenuIds(roleId, menuIds);
+        return Result.success();
+    }
+
 
 }

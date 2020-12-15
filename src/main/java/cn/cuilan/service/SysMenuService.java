@@ -86,7 +86,7 @@ public class SysMenuService extends BaseService<SysMenuMapper, SysMenu> {
             List<SysMenu> subSysMenus = parentSysMenuMap.get(menu.getId());
             if (CollUtil.isNotEmpty(subSysMenus)) {
                 Collections.sort(subSysMenus);
-                menu.setSubMenus(subSysMenus);
+                menu.setSysMenus(subSysMenus);
             }
         });
         return menus;

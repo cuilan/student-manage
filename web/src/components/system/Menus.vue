@@ -22,7 +22,7 @@
         stripe
         row-key="id"
         default-expand-all
-        :tree-props="{ children: 'subMenus', hasChildren: 'parentId !== 0' }"
+        :tree-props="{ children: 'sysMenus', hasChildren: 'parentId !== 0' }"
       >
         <el-table-column label="ID" prop="id"></el-table-column>
         <el-table-column label="菜单名称">

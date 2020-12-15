@@ -106,11 +106,7 @@ public class SysUserController {
     @PostMapping("/api/sysUser/add")
     public Result<?> addSysUser(@Logined Long currentSysUserId, @RequestBody SysUser sysUser) {
         log.info("add SysUser, currentSysUserId: {}", currentSysUserId);
-
-        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
-        if (!currentSysUser.getUsername().equals("admin")) {
-            return Result.fail("只有管理员才有权限添加新用户!");
-        }
+        sysUserService.checkIsAdmin(currentSysUserId);
 
         sysUser.setStatus(true);
         sysUserService.save(sysUser);
@@ -123,11 +119,7 @@ public class SysUserController {
     @PostMapping("/api/sysUser/update")
     public Result<?> updateSysUser(@Logined Long currentSysUserId, @RequestBody SysUser sysUser) {
         log.info("update SysUser, currentSysUserId: {}", currentSysUserId);
-
-        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
-        if (!currentSysUser.getUsername().equals("admin")) {
-            return Result.fail("只有管理员才有权限修改用户!");
-        }
+        sysUserService.checkIsAdmin(currentSysUserId);
 
         SysUser dbSysUser = sysUserService.getNotNull(sysUser.getId());
         // 修改用户名
@@ -158,11 +150,7 @@ public class SysUserController {
     @PostMapping("/api/sysUser/delete")
     public Result<?> deleteSysUser(@Logined Long currentSysUserId, Long sysUserId) {
         log.info("delete SysUser, currentSysUserId: {}", currentSysUserId);
-
-        SysUser currentSysUser = sysUserService.getNotNull(currentSysUserId);
-        if (!currentSysUser.getUsername().equals("admin")) {
-            return Result.fail("只有管理员才有权限删除用户!");
-        }
+        sysUserService.checkIsAdmin(currentSysUserId);
 
         boolean deleted = sysUserService.removeById(sysUserId);
         return deleted ? Result.success("删除成功") : Result.fail("删除失败");
