@@ -32,8 +32,18 @@ public class SysUserService extends BaseService<SysUserMapper, SysUser> {
     public void checkIsAdmin(Long sysUserId) {
         SysUser currentSysUser = getNotNull(sysUserId);
         if (!currentSysUser.getUsername().equals("admin")) {
-            throw new BaseException("只有管理员才有权限进行该操作!");
+            throw new BaseException("只有超级管理员才有权限进行该操作!");
         }
+    }
+
+    /**
+     * 获取系统用户及角色信息
+     *
+     * @param sysUserId 系统用户id
+     * @return 返回系统用户
+     */
+    public SysUser getSysUserAndRoleInfo(Long sysUserId) {
+        return sysUserMapper.getById(sysUserId);
     }
 
     /**

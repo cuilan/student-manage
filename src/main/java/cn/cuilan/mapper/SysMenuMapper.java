@@ -22,7 +22,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      *
      * @return 菜单list
      */
-    @Select("select * from t_sys_menu where visible = true")
+    @Select("select * from t_sys_menu")
     List<SysMenu> getAllSysMenu();
 
     /**

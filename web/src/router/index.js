@@ -6,6 +6,7 @@ import Welcome from '../components/Welcome.vue'
 import Users from '../components/system/Users.vue'
 import Menus from '../components/system/Menus.vue'
 import Roles from '../components/system/Roles.vue'
+import StudentQuery from '../components/student/StudentQuery.vue'
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,8 @@ const router = new VueRouter({
         { path: '/welcome', component: Welcome },
         { path: '/users', component: Users },
         { path: '/menus', component: Menus },
-        { path: '/roles', component: Roles }
+        { path: '/roles', component: Roles },
+        { path: '/student-query', component: StudentQuery }
       ]
     }
   ]

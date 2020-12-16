@@ -96,7 +96,7 @@
             </el-tooltip>
             <el-tooltip
               effect="dark"
-              content="设置用户菜单"
+              content="设置角色"
               placement="top"
               :enterable="false"
             >
@@ -105,6 +105,7 @@
                 icon="el-icon-setting"
                 size="mini"
                 v-model="scope.row.id"
+                @click="showRole(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -196,6 +197,41 @@
         <el-button type="primary" @click="updateSysUser">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分配角色对话框 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="showRoleDialogVisible"
+      width="30%"
+      @close="setRoleDialogclosed"
+    >
+      <div>
+        <p>
+          当前用户：<b>{{ userInfo.username }}</b>
+        </p>
+        <p>
+          当前角色：<b>{{ userInfo.roleName }}</b>
+        </p>
+        <p>
+          角色描述：<b>{{ userInfo.description }}</b>
+        </p>
+        <p>
+          分配新角色：
+          <el-select v-model="selectedRoleId" placeholder="请选择">
+            <el-option
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.description"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleIdAndUserId">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -258,7 +294,14 @@ export default {
         portrait: ''
       },
       // 修改验证对象
-      editSysUserFormRules: {}
+      editSysUserFormRules: {},
+      // 控制分配角色对话框的显示
+      showRoleDialogVisible: false,
+      userInfo: {},
+      // 所有角色数据列表
+      roleList: [],
+      // 下拉角色列表选中的角色id值
+      selectedRoleId: ''
     }
   },
   created() {
@@ -397,6 +440,41 @@ export default {
       this.$message.success('删除成功')
       // 刷新用户列表
       this.getUserList()
+    },
+    // 点击分配角色按钮事件
+    async showRole(sysUser) {
+      this.userInfo = sysUser
+      // 获取所有角色列表
+      const { data: res } = await this.$http.get('/api/sysRole/all')
+      if (res.code !== 200) {
+        return this.$message.error(res.message)
+      }
+      this.roleList = res.data.roles
+      // 展示分配角色对话框
+      this.showRoleDialogVisible = true
+    },
+    // 保存角色与用户的关联关系
+    async saveRoleIdAndUserId() {
+      if (!this.selectedRoleId) {
+        return this.$message.error('请选择要分配的角色')
+      }
+      // console.log(this.selectedRoleId)
+      // console.log(this.userInfo.id)
+      const { data: res } = await this.$http.post(
+        `/api/sysRole/addSysUser?roleId=${this.selectedRoleId}&userId=${this.userInfo.id}`
+      )
+      if (res.code !== 200) {
+        return this.$message.error(res.message)
+      }
+      this.$message.success('更新角色成功')
+      this.getUserList()
+      // 关闭分配角色对话框
+      this.showRoleDialogVisible = false
+    },
+    // 监听分配角色对话框关闭事件，重置复选框中的数据
+    setRoleDialogclosed() {
+      this.selectedRoleId = ''
+      this.userInfo = {}
     }
   }
 }

@@ -11,10 +11,12 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -65,9 +67,20 @@ public class MVCConfig implements WebMvcConfigurer {
     }
 
     @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 获取当前class绝对路径
+        String currentPath = System.getProperty("user.dir");
+        // 拼接前端页面: /web/dist/ 路径
+        String projectPath = currentPath + File.separator + "web" + File.separator + "dist" + File.separator;
+        log.info("projectPath: {}", projectPath);
+        registry.addResourceHandler("/**")
+                .addResourceLocations("file://" + projectPath);
+    }
+
+    @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         // 设置默认页面
-        registry.addViewController("/");
+        registry.addViewController("/").setViewName("forward:index.html");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cn.cuilan.entity;
 
 import cn.cuilan.common.BaseIdTimeEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,6 +53,24 @@ public class SysUser extends BaseIdTimeEntity<Long> {
      * 最后登录时间
      */
     private Long lastLoginTime;
+
+    /**
+     * 该用户的角色id
+     */
+    @TableField(exist = false)
+    private Long roleId;
+
+    /**
+     * 该用户的角色名称
+     */
+    @TableField(exist = false)
+    private String roleName;
+
+    /**
+     * 该用户的角色描述
+     */
+    @TableField(exist = false)
+    private String description;
 
     /**
      * 将 Long 类型时间转为 LocalDateTime 类型

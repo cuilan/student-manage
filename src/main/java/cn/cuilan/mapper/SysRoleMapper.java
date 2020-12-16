@@ -48,4 +48,21 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      */
     @Delete("delete from t_sys_menu_roles where roles_id = #{roleId}")
     void deleteMenuIdsByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     * 根据用户id删除所有用户与角色的关联关系
+     *
+     * @param userId 用户id
+     */
+    @Delete("delete from t_sys_user_roles where sys_user_id = #{userId}")
+    void deleteRoleIdByUserId(@Param("userId") Long userId);
+
+    /**
+     * 插入用户与角色的关联关系
+     *
+     * @param roleId 角色id
+     * @param userId 用户id
+     */
+    @Insert("INSERT INTO `t_sys_user_roles`(`roles_id`, `sys_user_id`) VALUES (#{roleId}, #{userId})")
+    void insertSysUserRoles(@Param("roleId") Long roleId, @Param("userId") Long userId);
 }

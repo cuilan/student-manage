@@ -58,7 +58,7 @@ CREATE TABLE `t_sys_user_roles`
 (
     `roles_id`    BIGINT(20) NOT NULL COMMENT '角色id',
     `sys_user_id` BIGINT(20) NOT NULL COMMENT '用户id',
-    UNIQUE KEY `uk_roleId_userId` (`roles_id`, `sys_user_id`)
+    UNIQUE KEY `uk_sys_userId` (`sys_user_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='用户和角色关联表';
 

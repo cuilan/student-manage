@@ -49,7 +49,8 @@ public class SysUserController {
             return Result.fail("密码错误");
         }
 
-        if (!sysUser.isStatus()) {
+        // 非超级管理员，需要判断是否可用
+        if (!sysUser.getUsername().equals("admin") && !sysUser.isStatus()) {
             return Result.fail("您当前的账号不可用，请联系管理员!");
         }
 
@@ -87,7 +88,7 @@ public class SysUserController {
         }
 
         if (sysUserId != null && sysUserId != 0) {
-            SysUser sysUser = sysUserService.getNotNull(sysUserId);
+            SysUser sysUser = sysUserService.getSysUserAndRoleInfo(sysUserId);
             // 如果不是管理员，需要忽略用户敏感信息
             if (!isAdmin) {
                 sysUserService.ignoreSysUserInfo(sysUser);

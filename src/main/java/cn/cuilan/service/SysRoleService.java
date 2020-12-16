@@ -68,4 +68,17 @@ public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
             }
         }
     }
+
+    /**
+     * 添加角色id与用户id的关联关系
+     *
+     * @param roleId 角色id
+     * @param userId 用户id
+     */
+    public void addByRoleIdAndUserId(Long roleId, Long userId) {
+        // 先删除所有
+        sysRoleMapper.deleteRoleIdByUserId(userId);
+        // 添加角色与用户的关联关系
+        sysRoleMapper.insertSysUserRoles(roleId, userId);
+    }
 }

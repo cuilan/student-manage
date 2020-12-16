@@ -314,7 +314,7 @@ export default {
           this.editSysRoleForm
         )
         if (res.code !== 200) {
-          this.$message.error(res.message)
+          return this.$message.error(res.message)
         }
         this.$message.success('更新成功!')
         this.editDialogVisible = false

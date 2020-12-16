@@ -8,14 +8,6 @@
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
-      <!-- 添加按钮 -->
-      <el-row>
-        <el-col>
-          <el-button class="custom-button" type="primary"
-            >添加一级菜单</el-button
-          >
-        </el-col>
-      </el-row>
       <el-table
         :data="menuList"
         border
@@ -52,6 +44,7 @@
               v-model="scope.row.visible"
               active-color="#13ce66"
               inactive-color="#ff4949"
+              @change="updateMenuStatus(scope.row)"
             >
             </el-switch>
           </template>
@@ -66,7 +59,9 @@ export default {
   data() {
     return {
       // 菜单集合
-      menuList: []
+      menuList: [],
+      // 菜单信息
+      menuInfo: {}
     }
   },
   created() {
@@ -80,6 +75,18 @@ export default {
       }
       // console.log(res.data.menus)
       this.menuList = res.data.menus
+    },
+    // 更新菜单可用状态
+    async updateMenuStatus(menuInfo) {
+      const { data: res } = await this.$http.post('/api/sysMenu/update', {
+        id: menuInfo.id,
+        visible: menuInfo.visible
+      })
+      if (res.code !== 200) {
+        menuInfo.visible = !menuInfo.visible
+        return this.$message.error(res.message)
+      }
+      return this.$message.success('状态更新成功!')
     }
   }
 }

@@ -129,5 +129,19 @@ public class SysRoleController {
         return Result.success();
     }
 
+    /**
+     * 添加角色id与用户id的关联关系
+     */
+    @PostMapping("/api/sysRole/addSysUser")
+    public Result<?> addByRoleIdAndUserId(@Logined Long currentSysUserId,
+                                          @RequestParam("roleId") Long roleId,
+                                          @RequestParam("userId") Long userId) {
+        sysUserService.checkIsAdmin(currentSysUserId);
 
+        if (userId == null || userId == 0) {
+            return Result.fail("用户id不能为空");
+        }
+        sysRoleService.addByRoleIdAndUserId(roleId, userId);
+        return Result.success();
+    }
 }
