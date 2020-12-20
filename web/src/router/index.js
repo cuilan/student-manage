@@ -6,6 +6,8 @@ import Welcome from '../components/Welcome.vue'
 import Users from '../components/system/Users.vue'
 import Menus from '../components/system/Menus.vue'
 import Roles from '../components/system/Roles.vue'
+import Grades from '../components/student/Grades.vue'
+import ClassRank from '../components/student/ClassRank.vue'
 import StudentQuery from '../components/student/StudentQuery.vue'
 
 Vue.use(VueRouter)
@@ -23,6 +25,8 @@ const router = new VueRouter({
         { path: '/users', component: Users },
         { path: '/menus', component: Menus },
         { path: '/roles', component: Roles },
+        { path: '/grades', component: Grades },
+        { path: '/class-rank', component: ClassRank },
         { path: '/student-query', component: StudentQuery }
       ]
     }

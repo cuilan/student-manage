@@ -20,7 +20,7 @@ CREATE TABLE `t_sys_user`
     UNIQUE KEY `uk_username` (`username`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8mb4 COMMENT ='系统用户表';
+  DEFAULT CHARSET = utf8mb4 COMMENT = '系统用户表';
 
 -- 系统菜单表
 CREATE TABLE `t_sys_menu`
@@ -37,7 +37,7 @@ CREATE TABLE `t_sys_menu`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8 COMMENT ='系统菜单表';
+  DEFAULT CHARSET = utf8 COMMENT = '系统菜单表';
 
 -- 系统角色表
 CREATE TABLE `t_sys_role`
@@ -51,7 +51,7 @@ CREATE TABLE `t_sys_role`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8 COMMENT ='系统角色表';
+  DEFAULT CHARSET = utf8 COMMENT = '系统角色表';
 
 -- 用户角色关联表
 CREATE TABLE `t_sys_user_roles`
@@ -60,7 +60,7 @@ CREATE TABLE `t_sys_user_roles`
     `sys_user_id` BIGINT(20) NOT NULL COMMENT '用户id',
     UNIQUE KEY `uk_sys_userId` (`sys_user_id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='用户和角色关联表';
+  DEFAULT CHARSET = utf8 COMMENT = '用户和角色关联表';
 
 -- 菜单角色关联表
 CREATE TABLE `t_sys_menu_roles`
@@ -69,4 +69,45 @@ CREATE TABLE `t_sys_menu_roles`
     `sys_menu_id` BIGINT(20) NOT NULL COMMENT '菜单id',
     UNIQUE KEY `uk_roleId_menuId` (`roles_id`, `sys_menu_id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='角色和菜单关联表';
+  DEFAULT CHARSET = utf8 COMMENT = '角色和菜单关联表';
+
+-- 年级表
+CREATE TABLE `t_grade`
+(
+    `id`          BIGINT(20)  NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `create_time` BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time` BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `name`        VARCHAR(32) NOT NULL DEFAULT '' COMMENT '年级名称',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_name` (`name`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '年级表';
+
+-- 班级表
+CREATE TABLE `t_class_rank`
+(
+    `id`          BIGINT(20)  NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `create_time` BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time` BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `name`        VARCHAR(32) NOT NULL DEFAULT '' COMMENT '班级名称',
+    `grade_id`    BIGINT(20)  NOT NULL DEFAULT 0 COMMENT '年级Id',
+    PRIMARY KEY (`id`),
+    KEY `idx_grade_id` (`grade_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '班级表';
+
+-- 学生表
+CREATE TABLE `t_student`
+(
+    `id`              BIGINT(20)  NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `create_time`     BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time`     BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `name`            VARCHAR(32) NOT NULL DEFAULT '' COMMENT '学生姓名',
+    `sex`             TINYINT(1)  NOT NULL DEFAULT 0 COMMENT '性别，0-男，1-女',
+    `age`             TINYINT(2)  NOT NULL DEFAULT 0 COMMENT '年龄',
+    `class_rank_id` BIGINT(20)  NOT NULL DEFAULT 0 COMMENT '班级Id',
+
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '学生表';
+

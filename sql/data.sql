@@ -9,14 +9,20 @@ INSERT INTO `t_sys_user`(`id`, `username`, `password`, `phone`, `status`, `portr
 INSERT INTO `t_sys_menu`(`id`, `name`, `url`, `icon`, `parent_id`, `priority`,
 `visible`, `create_time`, `update_time`) VALUES
 (1, '主页', '/home', 'el-icon-s-home', 0, 0, 1, 1607765013556, 1607765013556),
-(2, '学生信息管理', '/students', 'el-icon-s-custom', 0, 2, 1, 1607765013556, 1607765013556),
+-- 系统管理
+(2, '系统管理', '/settings', 'el-icon-s-tools', 0, 2, 1, 1607765013556, 1607765013556),
+(3, '系统用户管理', '/users', 'el-icon-user', 2, 3, 1, 1607765013556, 1607765013556),
+(4, '系统菜单管理', '/menus', 'el-icon-document', 2, 4, 1, 1607765013556, 1607765013556),
+(5, '系统角色管理', '/roles', 'el-icon-trophy', 2, 5, 1, 1607765013556, 1607765013556),
+-- 学生管理
+(6, '学生管理', '/students', 'el-icon-s-custom', 0, 6, 1, 1607765013556, 1607765013556),
+(7, '年级管理', '/grades', 'el-icon-s-management', 6, 7, 1, 1607765013556, 1607765013556),
+(8, '班级管理', '/class-rank', 'el-icon-s-finance', 6, 8, 1, 1607765013556, 1607765013556),
+
 (3, '学生成绩管理', '/scores', 'el-icon-s-claim', 0, 3, 1, 1607765013556, 1607765013556),
 (4, '考试信息管理', '/exams', 'el-icon-s-check', 0, 4, 1, 1607765013556, 1607765013556),
-(5, '系统管理', '/settings', 'el-icon-s-tools', 0, 5, 1, 1607765013556, 1607765013556),
-(6, '系统用户管理', '/users', 'el-icon-user', 5, 6, 1, 1607765013556, 1607765013556),
-(7, '系统菜单管理', '/menus', 'el-icon-document', 5, 7, 1, 1607765013556, 1607765013556),
-(8, '系统角色管理', '/roles', 'el-icon-trophy', 5, 8, 1, 1607765013556, 1607765013556),
-(9, '录入信息', '/student-add', 'el-icon-document-add', 2, 9, 1, 1607765013556, 1607765013556),
+
+(9, '年级管理', '/grade', 'el-icon-document-add', 2, 9, 1, 1607765013556, 1607765013556),
 (10, '查询信息', '/student-query', 'el-icon-search', 2, 10, 1, 1607765013556, 1607765013556),
 (11, '修改信息', '/student-edit', 'el-icon-edit', 2, 11, 1, 1607765013556, 1607765013556),
 (12, '打印信息', '/student-print', 'el-icon-printer', 2, 12, 1, 1607765013556, 1607765013556),
@@ -38,3 +44,17 @@ INSERT INTO `t_sys_role`(`id`, `name`, `description`, `visible`, `create_time`, 
 -- 插入关联表初始数据
 INSERT INTO `t_sys_user_roles`(`roles_id`, `sys_user_id`) VALUES (1, 1), (2, 2), (3, 3);
 INSERT INTO `t_sys_menu_roles`(`roles_id`, `sys_menu_id`) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8);
+
+-- 插入年级表初始数据
+INSERT INTO `t_grade`(`id`, `create_time`, `update_time`, `name`) VALUES
+(1, 1607765013556, 1607765013556, '一年级'),
+(2, 1607765013556, 1607765013556, '二年级'),
+(3, 1607765013556, 1607765013556, '三年级'),
+(4, 1607765013556, 1607765013556, '四年级'),
+(5, 1607765013556, 1607765013556, '五年级');
+
+-- 插入班级表初始数据
+INSERT INTO `t_class_rank`(`id`, `create_time`, `update_time`, `name`, `grade_id`) VALUES
+(1, 1607765013556, 1607765013556, '一年级一班', 1),
+(2, 1607765013556, 1607765013556, '二年级三班', 2),
+(3, 1607765013556, 1607765013556, '三年级六班', 3);
