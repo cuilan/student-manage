@@ -1,6 +1,7 @@
 package cn.cuilan.controller;
 
 import cn.cuilan.entity.Grade;
+import cn.cuilan.service.ClassRankService;
 import cn.cuilan.service.GradeService;
 import cn.cuilan.utils.result.Result;
 import cn.hutool.core.util.StrUtil;
@@ -22,6 +23,9 @@ public class GradeController {
     @Resource
     private GradeService gradeService;
 
+    @Resource
+    private ClassRankService classRankService;
+
     /**
      * 查询所有年级
      */
@@ -34,12 +38,12 @@ public class GradeController {
     }
 
     /**
-     * 根基id查询年级
+     * 根据id查询年级
      *
      * @param id 年级id
      */
     @GetMapping("/api/grade/queryById")
-    public Result<?> queryGradeBydId(Long id) {
+    public Result<?> queryGradeById(Long id) {
         return Result.map().data("grade", gradeService.getNotNull(id));
     }
 
@@ -76,6 +80,11 @@ public class GradeController {
     public Result<?> deleteGrade(Long id) {
         // 根据id查询一下，如果没有，则会抛出异常
         gradeService.getNotNull(id);
+        // 校验年级下是否有班级
+        Integer classRankNum = classRankService.countClassRankById(id);
+        if (classRankNum > 0) {
+            return Result.fail("该年级下有班级，不能删除");
+        }
         gradeService.removeById(id);
         return Result.success();
     }

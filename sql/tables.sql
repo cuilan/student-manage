@@ -99,14 +99,17 @@ CREATE TABLE `t_class_rank`
 -- 学生表
 CREATE TABLE `t_student`
 (
-    `id`              BIGINT(20)  NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `create_time`     BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '创建时间',
-    `update_time`     BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '最后修改时间',
-    `name`            VARCHAR(32) NOT NULL DEFAULT '' COMMENT '学生姓名',
-    `sex`             TINYINT(1)  NOT NULL DEFAULT 0 COMMENT '性别，0-男，1-女',
-    `age`             TINYINT(2)  NOT NULL DEFAULT 0 COMMENT '年龄',
-    `class_rank_id` BIGINT(20)  NOT NULL DEFAULT 0 COMMENT '班级Id',
-
+    `id`            BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `create_time`   BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time`   BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `name`          VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '学生姓名',
+    `sex`           TINYINT(2)   NOT NULL DEFAULT 0 COMMENT '性别，0-男，1-女',
+    `age`           TINYINT(2)   NOT NULL DEFAULT 0 COMMENT '年龄',
+    `blood_type`    TINYINT(2)   NOT NULL DEFAULT 0 COMMENT '血型，0-A，1-B，2-AB，3-O',
+    `nation`        VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '民族',
+    `address`       VARCHAR(255) NOT NULL DEFAULT '' COMMENT '家庭住址',
+    `grade_id`      BIGINT(20)   NOT NULL DEFAULT 0 COMMENT '年级Id',
+    `class_rank_id` BIGINT(20)   NOT NULL DEFAULT 0 COMMENT '班级Id',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT = '学生表';

@@ -18,6 +18,7 @@ INSERT INTO `t_sys_menu`(`id`, `name`, `url`, `icon`, `parent_id`, `priority`,
 (6, '学生管理', '/students', 'el-icon-s-custom', 0, 6, 1, 1607765013556, 1607765013556),
 (7, '年级管理', '/grades', 'el-icon-s-management', 6, 7, 1, 1607765013556, 1607765013556),
 (8, '班级管理', '/class-rank', 'el-icon-s-finance', 6, 8, 1, 1607765013556, 1607765013556),
+(9, '学生信息管理', '/student', 'el-icon-search', 6, 9, 1, 1607765013556, 1607765013556),
 
 (3, '学生成绩管理', '/scores', 'el-icon-s-claim', 0, 3, 1, 1607765013556, 1607765013556),
 (4, '考试信息管理', '/exams', 'el-icon-s-check', 0, 4, 1, 1607765013556, 1607765013556),
@@ -55,6 +56,11 @@ INSERT INTO `t_grade`(`id`, `create_time`, `update_time`, `name`) VALUES
 
 -- 插入班级表初始数据
 INSERT INTO `t_class_rank`(`id`, `create_time`, `update_time`, `name`, `grade_id`) VALUES
-(1, 1607765013556, 1607765013556, '一年级一班', 1),
-(2, 1607765013556, 1607765013556, '二年级三班', 2),
-(3, 1607765013556, 1607765013556, '三年级六班', 3);
+(1, 1607765013556, 1607765013556, '一年级1班', 1),
+(2, 1607765013556, 1607765013556, '二年级1班', 2),
+(3, 1607765013556, 1607765013556, '三年级1班', 3);
+
+-- 插入学生表初始数据
+INSERT INTO `t_student`(`id`, `create_time`, `update_time`, `name`, `sex`, `age`,
+`blood_type`, `nation`, `address`, `grade_id`, `class_rank_id`) VALUES
+(1, 1607765013556, 1607765013556, '张小明', 0, 8, 3, '汉族', '北京市海淀区', 1, 1);

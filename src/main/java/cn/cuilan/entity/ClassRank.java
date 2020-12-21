@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("t_grade")
+@TableName("t_class_rank")
 public class ClassRank extends BaseIdTimeEntity<Long> {
 
     /**

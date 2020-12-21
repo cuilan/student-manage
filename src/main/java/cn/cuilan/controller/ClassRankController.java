@@ -1,12 +1,12 @@
 package cn.cuilan.controller;
 
+import cn.cuilan.entity.ClassRank;
 import cn.cuilan.service.ClassRankService;
+import cn.cuilan.service.StudentService;
 import cn.cuilan.utils.result.Result;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -20,6 +20,9 @@ public class ClassRankController {
 
     @Resource
     private ClassRankService classRankService;
+
+    @Resource
+    private StudentService studentService;
 
     /**
      * 查询所有班级
@@ -38,4 +41,60 @@ public class ClassRankController {
         return Result.map().data("classRanks", classRankService.queryClassRanks(name, gradeId, pageNum, pageSize));
     }
 
+    /**
+     * 根据id查询班级
+     *
+     * @param id 班级id
+     */
+    @GetMapping("/api/classRank/queryById")
+    public Result<?> queryClassRankById(Long id) {
+        return Result.map().data("classRank", classRankService.getNotNull(id));
+    }
+
+    /**
+     * 添加班级
+     */
+    @PostMapping("/api/classRank/add")
+    public Result<?> addClassRank(@RequestBody ClassRank classRank) {
+        if (StrUtil.isBlank(classRank.getName())) {
+            return Result.fail("请输入班级名称");
+        }
+        if (classRank.getGradeId() == null || classRank.getGradeId() <= 0) {
+            return Result.fail("请选择年级");
+        }
+        classRankService.save(classRank);
+        return Result.success();
+    }
+
+    /**
+     * 修改班级
+     */
+    @PostMapping("/api/classRank/update")
+    public Result<?> updateClassRank(@RequestBody ClassRank classRank) {
+        ClassRank dbClassRank = classRankService.getNotNull(classRank.getId());
+        if (StrUtil.isNotBlank(classRank.getName())) {
+            dbClassRank.setName(classRank.getName());
+        }
+        if (classRank.getGradeId() != null && classRank.getGradeId() > 0) {
+            dbClassRank.setGradeId(classRank.getGradeId());
+        }
+        classRankService.updateById(dbClassRank);
+        return Result.success();
+    }
+
+    /**
+     * 删除班级
+     */
+    @PostMapping("/api/classRank/delete")
+    public Result<?> deleteClassRank(Long id) {
+        // 根据id查询一下，如果没有，则会抛出异常
+        classRankService.getNotNull(id);
+        // 校验该班级下是否有学生
+        Integer studentNum = studentService.countByClassRankId(id);
+        if (studentNum > 0) {
+            return Result.fail("该班级下有学生，不能删除");
+        }
+        classRankService.removeById(id);
+        return Result.success();
+    }
 }

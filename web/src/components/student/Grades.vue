@@ -94,7 +94,7 @@
     </el-dialog>
     <!-- 修改对话框 -->
     <el-dialog
-      title="添加年级"
+      title="修改年级"
       :visible.sync="editDialogVisible"
       width="30%"
       @close="editDialogclose"

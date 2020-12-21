@@ -11,7 +11,12 @@
       <!-- 搜索输入框 添加按钮 -->
       <el-row :gutter="20">
         <el-col :span="4">
-          <el-select v-model="queryInfo.gradeId" clearable placeholder="请选择">
+          <el-select
+            v-model="queryInfo.gradeId"
+            clearable
+            @clear="getClassRankList()"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in gradeList"
               :key="item.id"
@@ -65,7 +70,7 @@
               icon="el-icon-delete"
               size="mini"
               v-model="scope.row.id"
-              @click="removeGradeById(scope.row.id)"
+              @click="removeClassRankById(scope.row.id)"
               >删除班级</el-button
             >
           </template>
@@ -84,50 +89,78 @@
     </el-card>
     <!-- 添加对话框 -->
     <el-dialog
-      title="添加年级"
+      title="添加班级"
       :visible.sync="addDialogVisible"
       width="30%"
       @close="addDialogclose"
     >
       <el-form
-        :model="addGradeForm"
-        :rules="addGradeFormRules"
-        ref="addGradeFormRef"
+        :model="addClassRankForm"
+        :rules="addClassRankFormRules"
+        ref="addClassRankFormRef"
         label-width="100px"
       >
-        <el-form-item label="年级名称" prop="name">
-          <el-input v-model="addGradeForm.name"></el-input>
+        <el-form-item label="班级名称" prop="name">
+          <el-input v-model="addClassRankForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="所属年级" prop="gradeId">
+          <el-select
+            v-model="addClassRankForm.gradeId"
+            placeholder="请选择年级"
+          >
+            <el-option
+              v-for="item in addGradeList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <!-- 按钮区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button class="custom-button" type="primary" @click="addGrade"
+        <el-button class="custom-button" type="primary" @click="addClassRank"
           >确 定</el-button
         >
       </span>
     </el-dialog>
     <!-- 修改对话框 -->
     <el-dialog
-      title="添加年级"
+      title="修改班级"
       :visible.sync="editDialogVisible"
       width="30%"
       @close="editDialogclose"
     >
       <el-form
-        :model="editGradeForm"
-        :rules="addGradeFormRules"
-        ref="editGradeFormRef"
+        :model="editClassRankForm"
+        :rules="addClassRankFormRules"
+        ref="editClassRankFormRef"
         label-width="100px"
       >
-        <el-form-item label="年级名称" prop="name">
-          <el-input v-model="editGradeForm.name"></el-input>
+        <el-form-item label="班级名称" prop="name">
+          <el-input v-model="editClassRankForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="所属年级" prop="gradeId">
+          <el-select
+            v-model="editClassRankForm.gradeId"
+            placeholder="请选择年级"
+          >
+            <el-option
+              v-for="item in addGradeList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <!-- 按钮区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button class="custom-button" type="primary" @click="updateGrade"
+        <el-button class="custom-button" type="primary" @click="updateClassRank"
           >确 定</el-button
         >
       </span>
@@ -144,6 +177,8 @@ export default {
       gradeId: '',
       // 所有年级列表
       gradeList: [],
+      // 添加对话框中的年级下拉框
+      addGradeList: [],
       // 获取列表的参数
       queryInfo: {
         name: '',
@@ -156,17 +191,22 @@ export default {
       addDialogVisible: false,
       // 修改班级对话框展示
       editDialogVisible: false,
-      // 添加年级表单数据
-      addGradeForm: {
-        name: ''
+      // 添加班级表单数据
+      addClassRankForm: {
+        name: '',
+        gradeId: ''
       },
-      addGradeFormRules: {
-        name: [{ required: true, message: '请输入年级名称', trigger: 'blur' }]
+      addClassRankFormRules: {
+        name: [{ required: true, message: '请输入班级名称', trigger: 'blur' }],
+        gradeId: [
+          { required: true, message: '请选择所属年级', trigger: 'change' }
+        ]
       },
       // 修改年级表单数据
-      editGradeForm: {
+      editClassRankForm: {
         id: 0,
-        name: ''
+        name: '',
+        gradeId: ''
       }
     }
   },
@@ -196,6 +236,7 @@ export default {
         return this.$message.error(res.message)
       }
       this.gradeList = res.data.grades
+      this.addGradeList = res.data.grades
     },
     // 监听 pageSize 改变事件
     handleSizeChange(newSize) {
@@ -211,15 +252,15 @@ export default {
       this.queryInfo.pageNum = newPage
       this.getUserList()
     },
-    // 添加年级
-    addGrade() {
-      this.$refs.addGradeFormRef.validate(async valid => {
+    // 添加班级
+    addClassRank() {
+      this.$refs.addClassRankFormRef.validate(async valid => {
         if (!valid) {
           return valid
         }
         const { data: res } = await this.$http.post(
-          '/api/grade/add',
-          this.addGradeForm
+          '/api/classRank/add',
+          this.addClassRankForm
         )
         if (res.code !== 200) {
           this.$message.error(res.message)
@@ -227,37 +268,37 @@ export default {
         this.$message.success('添加成功!')
         this.addDialogVisible = false
         // 刷新列表
-        this.getGradeList()
+        this.getClassRankList()
       })
     },
     // 添加对话框关闭事件
     addDialogclose() {
-      this.$refs.addGradeFormRef.resetFields()
+      this.$refs.addClassRankFormRef.resetFields()
     },
     // 展示修改对话框
     async showEditDialog(id) {
       this.editDialogVisible = true
-      const { data: res } = await this.$http.get('/api/grade/queryById', {
+      const { data: res } = await this.$http.get('/api/classRank/queryById', {
         params: { id: id }
       })
       if (res.code !== 200) {
         return this.$message.error(res.message)
       }
-      this.editGradeForm = res.data.grade
+      this.editClassRankForm = res.data.classRank
     },
     // 修改对话框关闭事件
     editDialogclose() {
-      this.$refs.editGradeFormRef.resetFields()
+      this.$refs.editClassRankFormRef.resetFields()
     },
-    updateGrade() {
-      this.$refs.editGradeFormRef.validate(async valid => {
+    updateClassRank() {
+      this.$refs.editClassRankFormRef.validate(async valid => {
         if (!valid) {
           return valid
         }
         // 验证成功，发起请求
         const { data: res } = await this.$http.post(
-          '/api/grade/update',
-          this.editGradeForm
+          '/api/classRank/update',
+          this.editClassRankForm
         )
         if (res.code !== 200) {
           this.$message.error(res.message)
@@ -265,12 +306,12 @@ export default {
         this.$message.success('更新成功!')
         this.editDialogVisible = false
         // 刷新列表
-        this.getGradeList()
+        this.getClassRankList()
       })
     },
-    async removeGradeById(id) {
+    async removeClassRankById(id) {
       const confirmResult = await this.$confirm(
-        '此操作将永久删除该年级, 是否继续?',
+        '此操作将永久删除该班级, 是否继续?',
         '提示',
         {
           confirmButtonText: '确定',
@@ -282,7 +323,7 @@ export default {
         this.$message.info('已取消删除')
         return
       }
-      const { data: res } = await this.$http.post('/api/grade/delete?id=' + id)
+      const { data: res } = await this.$http.post('/api/classRank/delete?id=' + id)
       if (res.code !== 200) {
         return this.$message.error(res.message)
       }

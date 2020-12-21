@@ -1,12 +1,12 @@
 package cn.cuilan.controller;
 
 import cn.cuilan.entity.Student;
+import cn.cuilan.service.StudentService;
 import cn.cuilan.utils.result.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * 学生管理
@@ -18,13 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StudentController {
 
+    @Resource
+    private StudentService studentService;
+
     /**
      * 查询学生列表
      */
     @GetMapping("/api/student/query")
-    public Result<?> queryStudents() {
-
-        return Result.success();
+    public Result<?> queryStudents(@RequestParam(value = "name", required = false) String name,
+                                   @RequestParam(value = "classRankId", required = false) Long classRankId,
+                                   @RequestParam(value = "gradeId", required = false) Long gradeId,
+                                   @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
+                                   @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        return Result.map().data("students", studentService.queryStudents(name, gradeId, classRankId, pageNum, pageSize));
     }
 
     /**

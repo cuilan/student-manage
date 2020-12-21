@@ -32,4 +32,12 @@ public interface ClassRankMapper extends BaseMapper<ClassRank> {
                                     @Param("pageNum") int pageNum,
                                     @Param("pageSize") int pageSize);
 
+    /**
+     * 统计年级下的班级数量
+     *
+     * @param gradeId 年级id
+     * @return 返回该年级下的班级数量
+     */
+    @Select("select count(*) from t_class_rank where grade_id = #{gradeId}")
+    Integer countClassRankById(@Param("gradeId") Long gradeId);
 }
