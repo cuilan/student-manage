@@ -1,6 +1,8 @@
 package cn.cuilan.mapper;
 
 import cn.cuilan.entity.Student;
+import cn.cuilan.enums.BloodType;
+import cn.cuilan.enums.Sex;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,6 +31,9 @@ public interface StudentMapper extends BaseMapper<Student> {
      * 查询学生列表
      *
      * @param name        学生姓名
+     * @param sex         性别
+     * @param bloodType   血型
+     * @param nation      民族
      * @param gradeId     年级id
      * @param classRankId 班级id
      * @param pageNum     页码
@@ -41,6 +46,7 @@ public interface StudentMapper extends BaseMapper<Student> {
             " left join t_class_rank as cr on cr.grade_id = g.id ",
             " left join t_student as s on s.class_rank_id = cr.id ",
             " where 1 = 1 ",
+            " and s.id is not null ",
             "<if test='gradeId!=null'>",
             " and s.grade_id = #{gradeId} ",
             "</if>",
@@ -50,8 +56,20 @@ public interface StudentMapper extends BaseMapper<Student> {
             "<if test='name!=null'>",
             " and s.name like concat('%', #{name}, '%') ",
             "</if>",
+            "<if test='sex!=null'>",
+            " and s.sex = #{sex} ",
+            "</if>",
+            "<if test='bloodType!=null'>",
+            " and s.blood_type = #{bloodType} ",
+            "</if>",
+            "<if test='nation!=null'>",
+            " and s.nation = #{nation} ",
+            "</if>",
             "</script>"})
     Page<Student> queryStudents(@Param("name") String name,
+                                @Param("sex") Sex sex,
+                                @Param("bloodType") BloodType bloodType,
+                                @Param("nation") String nation,
                                 @Param("gradeId") Long gradeId,
                                 @Param("classRankId") Long classRankId,
                                 @Param("pageNum") int pageNum,

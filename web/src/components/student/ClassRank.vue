@@ -215,7 +215,7 @@ export default {
     this.getGradeList()
   },
   methods: {
-    // 查询年级列表
+    // 查询班级列表
     async getClassRankList() {
       // console.log(this.queryInfo)
       const { data: res } = await this.$http.get('/api/classRank/query', {

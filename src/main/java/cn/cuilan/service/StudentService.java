@@ -1,6 +1,8 @@
 package cn.cuilan.service;
 
 import cn.cuilan.entity.Student;
+import cn.cuilan.enums.BloodType;
+import cn.cuilan.enums.Sex;
 import cn.cuilan.mapper.StudentMapper;
 import com.github.pagehelper.Page;
 import org.springframework.stereotype.Service;
@@ -33,11 +35,15 @@ public class StudentService extends BaseService<StudentMapper, Student> {
      * 查询学生列表
      *
      * @param name        学生姓名
+     * @param sex         性别
+     * @param bloodType   血型
+     * @param nation      民族
      * @param gradeId     年级id
      * @param classRankId 班级id
      * @return 返回学生列表
      */
-    public Page<Student> queryStudents(String name, Long gradeId, Long classRankId, int pageNum, int pageSize) {
-        return studentMapper.queryStudents(name, gradeId, classRankId, pageNum, pageSize);
+    public Page<Student> queryStudents(String name, Sex sex, BloodType bloodType, String nation,
+                                       Long gradeId, Long classRankId, int pageNum, int pageSize) {
+        return studentMapper.queryStudents(name, sex, bloodType, nation, gradeId, classRankId, pageNum, pageSize);
     }
 }
