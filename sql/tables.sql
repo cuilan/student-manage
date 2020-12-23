@@ -114,3 +114,16 @@ CREATE TABLE `t_student`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT = '学生表';
 
+-- 科目表
+CREATE TABLE `t_subject`
+(
+    `id`          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `create_time` BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time` BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `name`        VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '科目名',
+    `exam`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否需要考试，0-需要，1-不需要',
+    `open`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否开卷，0-开卷，1-不开卷',
+    `remark`      VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '科目表';
