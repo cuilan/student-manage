@@ -24,12 +24,12 @@ public class Subject extends BaseIdTimeEntity<Long> {
     /**
      * 是否需要考试，0-需要，1-不需要
      */
-    private boolean exam;
+    private Boolean exam;
 
     /**
      * 是否开卷，0-开卷，1-不开卷
      */
-    private boolean open;
+    private Boolean open;
 
     /**
      * 备注

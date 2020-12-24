@@ -62,7 +62,7 @@ public class StudentController {
      * @param id 学生id
      */
     @GetMapping("/api/student/queryById")
-    public Result<?> querystudentById(Long id) {
+    public Result<?> queryStudentById(Long id) {
         Student student = studentService.getNotNull(id);
         Grade grade = gradeService.getNotNull(student.getGradeId());
         student.setGradeName(grade.getName());
