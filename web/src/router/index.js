@@ -10,6 +10,7 @@ import Grades from '../components/student/Grades.vue'
 import ClassRank from '../components/student/ClassRank.vue'
 import Student from '../components/student/Student.vue'
 import Subject from '../components/exams/Subject.vue'
+import Examination from '../components/exams/Examination.vue'
 
 Vue.use(VueRouter)
 
@@ -29,7 +30,8 @@ const router = new VueRouter({
         { path: '/grades', component: Grades },
         { path: '/class-rank', component: ClassRank },
         { path: '/student', component: Student },
-        { path: '/subject', component: Subject }
+        { path: '/subject', component: Subject },
+        { path: '/examination', component: Examination }
       ]
     }
   ]

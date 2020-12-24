@@ -22,6 +22,7 @@ INSERT INTO `t_sys_menu`(`id`, `name`, `url`, `icon`, `parent_id`, `priority`,
 -- 考试管理
 (10, '考试管理', '/exams', 'el-icon-s-check', 0, 10, 1, 1607765013556, 1607765013556),
 (11, '科目管理', '/subject', 'el-icon-s-flag', 10, 11, 1, 1607765013556, 1607765013556),
+(12, '考试信息', '/examination', 'el-icon-s-flag', 10, 12, 1, 1607765013556, 1607765013556),
 
 
 -- (3, '学生成绩管理', '/scores', 'el-icon-s-claim', 0, 3, 1, 1607765013556, 1607765013556),
@@ -84,5 +85,9 @@ INSERT INTO `t_subject`(`id`, `create_time`, `update_time`, `name`, `exam`, `ope
 (11, 1608795612413, 1608795612413, '音乐', false, false, '音乐课'),
 (12, 1608795612413, 1608795612413, '美术', false, false, '美术课');
 
+-- 插入考试信息表数据
+INSERT INTO `t_examination`(`id`, `create_time`, `update_time`, `name`, `subject_id`, `class_rank_id`,
+`start_time`, `end_time`, `total_score`, `finished`, `address`, `remark`) VALUES
+(1, 1608795612413, 1608795612413, '一年级一班语文考试', 1, 1, 1608859800000, 1608867000000, 100, false, '北京市', ''),
 
 

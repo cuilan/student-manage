@@ -37,14 +37,16 @@
       <el-table :data="gradeList" border stripe>
         <el-table-column label="序号" type="index"></el-table-column>
         <el-table-column label="年级名称" prop="name"></el-table-column>
-        <el-table-column
-          label="创建时间"
-          prop="createDateTime"
-        ></el-table-column>
-        <el-table-column
-          label="修改时间"
-          prop="upateDateTime"
-        ></el-table-column>
+        <el-table-column label="创建时间">
+          <template v-slot="scope">
+            {{ scope.row.createDateTime | dateToStr }}
+          </template></el-table-column
+        >
+        <el-table-column label="修改时间">
+          <template v-slot="scope">
+            {{ scope.row.upateDateTime | dateToStr }}
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="300px">
           <template v-slot="scope">
             <el-button
@@ -231,9 +233,7 @@ export default {
         this.$message.info('已取消删除')
         return
       }
-      const { data: res } = await this.$http.post(
-        '/api/grade/delete?id=' + id
-      )
+      const { data: res } = await this.$http.post('/api/grade/delete?id=' + id)
       if (res.code !== 200) {
         return this.$message.error(res.message)
       }

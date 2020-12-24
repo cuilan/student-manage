@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App.vue'
 // 导入路由
 import router from './router'
+// 导入moment.js
+import moment from 'moment'
 // 导入element.js组件
 import './plugins/element.js'
 // 导入全局样式表
@@ -30,6 +32,11 @@ axios.interceptors.request.use(config => {
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
+
+Vue.filter('dateToStr', function(value, format = 'YYYY-MM-DD hh:mm:ss') {
+  // 利用ES6形参默认值
+  return moment(value).format(format)
+})
 
 new Vue({
   // 将App实例挂载到路由

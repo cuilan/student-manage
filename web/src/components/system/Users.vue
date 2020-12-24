@@ -48,10 +48,11 @@
           label="最后登录IP"
           prop="lastLoginIp"
         ></el-table-column>
-        <el-table-column
-          label="最后登录时间"
-          prop="lastLoginDateTime"
-        ></el-table-column>
+        <el-table-column label="最后登录时间">
+          <template v-slot="scope">
+            {{ scope.row.lastLoginDateTime | dateToStr }}
+          </template>
+        </el-table-column>
         <el-table-column label="是否可用">
           <!-- 作用域插槽 -->
           <template v-slot="scope">

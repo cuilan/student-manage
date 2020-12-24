@@ -110,7 +110,9 @@ CREATE TABLE `t_student`
     `address`       VARCHAR(255) NOT NULL DEFAULT '' COMMENT '家庭住址',
     `grade_id`      BIGINT(20)   NOT NULL DEFAULT 0 COMMENT '年级Id',
     `class_rank_id` BIGINT(20)   NOT NULL DEFAULT 0 COMMENT '班级Id',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `idx_grade_id` (`grade_id`),
+    KEY `idx_class_rank_id` (`class_rank_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT = '学生表';
 
@@ -121,9 +123,30 @@ CREATE TABLE `t_subject`
     `create_time` BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '创建时间',
     `update_time` BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '最后修改时间',
     `name`        VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '科目名',
-    `exam`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否需要考试，0-需要，1-不需要',
-    `open`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否开卷，0-开卷，1-不开卷',
+    `exam`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否需要考试，0-不需要，1-需要',
+    `open`        TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否开卷，0-不开卷，1-开卷',
     `remark`      VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT = '科目表';
+
+-- 考试信息表
+CREATE TABLE `t_examination`
+(
+    `id`            BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `create_time`   BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time`   BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `name`          VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '考试名称',
+    `subject_id`    BIGINT(20)   NOT NULL DEFAULT 0 COMMENT '考试科目id',
+    `class_rank_id` BIGINT(20)   NOT NULL DEFAULT 0 COMMENT '考试班级id',
+    `start_time`    BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '开始时间',
+    `end_time`      BIGINT(13)   NOT NULL DEFAULT 0 COMMENT '结束时间',
+    `total_score`   TINYINT(3)   NOT NULL DEFAULT 0 COMMENT '总分数',
+    `finished`      TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否已完成，0-未完成，1-完成',
+    `address`       VARCHAR(255) NOT NULL DEFAULT '' COMMENT '考试地点',
+    `remark`        VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备注',
+    PRIMARY KEY (`id`),
+    KEY `idx_subject_id` (`subject_id`),
+    KEY `idx_class_rank_id` (`class_rank_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '考试信息表';
