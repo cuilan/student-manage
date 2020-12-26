@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * 考试信息mapper
  *
@@ -61,4 +63,12 @@ public interface ExaminationMapper extends BaseMapper<Examination> {
                                  @Param("classRankName") String classRankName,
                                  @Param("pageNum") int pageNum,
                                  @Param("pageSize") int pageSize);
+
+    /**
+     * 根据时间查询
+     *
+     * @param time 截止事假
+     */
+    @Select("select * from t_examination where end_time < #{time}")
+    List<Examination> queryExamsByTime(@Param("time") Long time);
 }
