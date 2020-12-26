@@ -150,3 +150,23 @@ CREATE TABLE `t_examination`
     KEY `idx_class_rank_id` (`class_rank_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT = '考试信息表';
+
+-- 学生考试成绩表
+CREATE TABLE `t_score`
+(
+    `id`             BIGINT(20)  NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `create_time`    BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time`    BIGINT(13)  NOT NULL DEFAULT 0 COMMENT '最后修改时间',
+    `student_id`     BIGINT(20)  NOT NULL DEFAULT 0 COMMENT '学生id',
+    `student_name`   VARCHAR(32) NOT NULL DEFAULT '' COMMENT '学生姓名',
+    `subject_id`     BIGINT(20)  NOT NULL DEFAULT 0 COMMENT '考试科目id',
+    `class_rank_id`  BIGINT(20)  NOT NULL DEFAULT 0 COMMENT '考试班级id',
+    `examination_id` BIGINT(20)  NOT NULL DEFAULT 0 COMMENT '考试信息id',
+    `score`          TINYINT(3)  NOT NULL DEFAULT 0 COMMENT '分数',
+    PRIMARY KEY (`id`),
+    KEY `idx_student_id` (`student_id`),
+    KEY `idx_subject_id` (`subject_id`),
+    KEY `idx_class_rank_id` (`class_rank_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '学生考试成绩表';
+

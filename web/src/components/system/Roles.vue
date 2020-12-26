@@ -280,7 +280,7 @@ export default {
           this.addSysRoleForm
         )
         if (res.code !== 200) {
-          this.$message.error(res.message)
+          return this.$message.error(res.message)
         }
         this.$message.success('添加成功!')
         this.addDialogVisible = false

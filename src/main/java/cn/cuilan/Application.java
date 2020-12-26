@@ -2,6 +2,7 @@ package cn.cuilan;
 
 import cn.cuilan.entity.Examination;
 import cn.cuilan.mapper.ExaminationMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
 
+@Slf4j
 @SpringBootApplication
 public class Application {
 
@@ -26,6 +28,7 @@ public class Application {
             examination.setFinished(true);
             examinationMapper.updateById(examination);
         });
+        log.info("Application-updateExaminationFinished update Examination, total: {}", exams.size());
     }
 
     public static void main(String[] args) {

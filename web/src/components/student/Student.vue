@@ -450,7 +450,7 @@ export default {
           this.addStudentForm
         )
         if (res.code !== 200) {
-          this.$message.error(res.message)
+          return this.$message.error(res.message)
         }
         this.$message.success('添加成功!')
         this.addDialogVisible = false
@@ -490,7 +490,7 @@ export default {
           this.editStudentForm
         )
         if (res.code !== 200) {
-          this.$message.error(res.message)
+          return this.$message.error(res.message)
         }
         this.$message.success('更新成功!')
         this.editDialogVisible = false

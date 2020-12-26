@@ -1,3 +1,4 @@
+
 -- 插入系统用户
 INSERT INTO `t_sys_user`(`id`, `username`, `password`, `phone`, `status`, `portrait`,
 `last_login_ip`, `last_login_time`, `create_time`, `update_time`) VALUES
@@ -22,25 +23,12 @@ INSERT INTO `t_sys_menu`(`id`, `name`, `url`, `icon`, `parent_id`, `priority`,
 -- 考试管理
 (10, '考试管理', '/exams', 'el-icon-s-check', 0, 10, 1, 1607765013556, 1607765013556),
 (11, '科目管理', '/subject', 'el-icon-s-flag', 10, 11, 1, 1607765013556, 1607765013556),
-(12, '考试信息', '/examination', 'el-icon-s-flag', 10, 12, 1, 1607765013556, 1607765013556),
+(12, '考试信息', '/examination', 'el-icon-medal', 10, 12, 1, 1607765013556, 1607765013556),
+-- 成绩管理
+(13, '成绩管理', '/score', 'el-icon-s-claim', 0, 13, 1, 1607765013556, 1607765013556),
+(14, '成绩查询', '/scores', 'el-icon-medal-1', 13, 14, 1, 1607765013556, 1607765013556);
 
-
--- (3, '学生成绩管理', '/scores', 'el-icon-s-claim', 0, 3, 1, 1607765013556, 1607765013556),
--- (4, '考试信息管理', '/exams', 'el-icon-s-check', 0, 4, 1, 1607765013556, 1607765013556),
--- (9, '年级管理', '/grade', 'el-icon-document-add', 2, 9, 1, 1607765013556, 1607765013556),
--- (10, '查询信息', '/student-query', 'el-icon-search', 2, 10, 1, 1607765013556, 1607765013556),
--- (11, '修改信息', '/student-edit', 'el-icon-edit', 2, 11, 1, 1607765013556, 1607765013556),
--- (12, '打印信息', '/student-print', 'el-icon-printer', 2, 12, 1, 1607765013556, 1607765013556),
--- (13, '录入成绩', '/scores-add', 'el-icon-document-add', 3, 13, 1, 1607765013556, 1607765013556),
--- (14, '查询成绩', '/scores-query', 'el-icon-search', 3, 14, 1, 1607765013556, 1607765013556),
--- (15, '修改成绩', '/scores-edit', 'el-icon-edit', 3, 15, 1, 1607765013556, 1607765013556),
--- (16, '打印成绩', '/scores-print', 'el-icon-printer', 3, 16, 1, 1607765013556, 1607765013556),
--- (17, '添加考试', '/exam-add', 'el-icon-plus', 3, 17, 1, 1607765013556, 1607765013556),
--- (18, '修改考试', '/exam-query', 'el-icon-check', 3, 18, 1, 1607765013556, 1607765013556),
--- (19, '删除考试', '/exam-delete', 'el-icon-close', 3, 19, 1, 1607765013556, 1607765013556),
--- (20, '科目管理', '/exam-manage', 'el-icon-monitor', 3, 20, 1, 1607765013556, 1607765013556);
-
--- 插入系统角色
+-- 插入系统权限
 INSERT INTO `t_sys_role`(`id`, `name`, `description`, `visible`, `create_time`, `update_time`) VALUES
 (1, 'ROLE_ROOT', '超级管理员', 1, 1607765013556, 1607765013556),
 (2, 'ROLE_ADMIN', '系统管理员', 1, 1607765013556, 1607765013556),
@@ -68,7 +56,10 @@ INSERT INTO `t_class_rank`(`id`, `create_time`, `update_time`, `name`, `grade_id
 INSERT INTO `t_student`(`id`, `create_time`, `update_time`, `name`, `sex`, `age`,
 `blood_type`, `nation`, `address`, `grade_id`, `class_rank_id`) VALUES
 (1, 1607765013556, 1607765013556, '张小明', 0, 8, 3, '汉族', '北京市海淀区', 1, 1),
-(2, 1608651438802, 1608651438802, '王小尼', 0, 10, 1, '苗族', '北京市西城区', 3, 3);
+(2, 1608651438802, 1608651438802, '王小尼', 0, 10, 1, '苗族', '北京市西城区', 3, 3),
+(3, 1607765013556, 1607765013556, '马云', 1, 8, 3, '汉族', '北京市海淀区', 1, 1),
+(4, 1608651438802, 1608651438802, '雷军', 0, 10, 1, '苗族', '北京市西城区', 3, 3),
+(5, 1607765013556, 1607765013556, '马化腾', 1, 9, 2, '汉族', '北京市海淀区', 1, 1);
 
 -- 插入科目表初始数据
 INSERT INTO `t_subject`(`id`, `create_time`, `update_time`, `name`, `exam`, `open`, `remark`) VALUES
@@ -93,4 +84,8 @@ INSERT INTO `t_examination`(`id`, `create_time`, `update_time`, `name`, `subject
 (3, 1608795612413, 1608795612413, '一年级-1班英语考试', 2, 1, 1608859800000, 1608867000000, 100, false, '北京市', ''),
 (4, 1608976022610, 1608976022610, '一年级-1班物理考试', 4, 1, 1609122600000, 1609131600000, 120, true, '北京市西城区西直门T1', 111);
 
-
+-- 插入成绩表初始数据
+INSERT INTO `t_score`(`id`, `create_time`, `update_time`, `student_id`, `student_name`, `subject_id`,
+`class_rank_id`, `examination_id`, `score`) VALUES
+(1, 1608976022610, 1608976022610, 1, '张小明', 1, 1, 1, 90),
+(2, 1608976022610, 1608976022610, 2, '王小尼', 1, 1, 1, 89);

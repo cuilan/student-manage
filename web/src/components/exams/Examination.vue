@@ -456,7 +456,7 @@ export default {
           this.addExamForm
         )
         if (res.code !== 200) {
-          this.$message.error(res.message)
+          return this.$message.error(res.message)
         }
         this.$message.success('添加成功!')
         this.addDialogVisible = false
@@ -488,7 +488,7 @@ export default {
           this.editExamForm
         )
         if (res.code !== 200) {
-          this.$message.error(res.message)
+          return this.$message.error(res.message)
         }
         this.$message.success('更新成功!')
         this.editDialogVisible = false

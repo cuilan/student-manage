@@ -263,7 +263,7 @@ export default {
           this.addClassRankForm
         )
         if (res.code !== 200) {
-          this.$message.error(res.message)
+          return this.$message.error(res.message)
         }
         this.$message.success('添加成功!')
         this.addDialogVisible = false
@@ -323,7 +323,9 @@ export default {
         this.$message.info('已取消删除')
         return
       }
-      const { data: res } = await this.$http.post('/api/classRank/delete?id=' + id)
+      const { data: res } = await this.$http.post(
+        '/api/classRank/delete?id=' + id
+      )
       if (res.code !== 200) {
         return this.$message.error(res.message)
       }

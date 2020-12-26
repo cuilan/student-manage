@@ -69,6 +69,6 @@ public interface ExaminationMapper extends BaseMapper<Examination> {
      *
      * @param time 截止事假
      */
-    @Select("select * from t_examination where end_time < #{time}")
+    @Select("select * from t_examination where finished = false and end_time < #{time}")
     List<Examination> queryExamsByTime(@Param("time") Long time);
 }
